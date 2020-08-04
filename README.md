@@ -23,3 +23,10 @@ space max : 9996 kbytes
 time : 110.48 s  
 space max : 497336 kbytes  
 
+### Query this tree with fasta/q file
+
+	/usr/bin/time -v /home/gsiekani/Documents/Softwares/HowQ/howdesbt queryQ --sort --qgram=/home/gsiekani/Documents/MinION/Strains_identification/sequences/TestIndelSeeds/classicSeed.txt /home/gsiekani/Documents/MinION/Strains_identification/sequences/reads/Mixture_test/3CIRM+JIM/CIRM67_4000_better_than_9.fastq --tree=howde.sbt --threshold=0.6 > ../results/CIRM67_4000_better_than_9.txt
+
+time : 84.04 s  
+space max : 71236 kbytes 
+
