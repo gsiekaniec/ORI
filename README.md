@@ -6,8 +6,8 @@
 	
 	/usr/bin/time -v /home/gsiekani/Documents/Softwares/HowQ/howdesbt makebfQ --k=15 --qgram=/home/gsiekani/Documents/MinION/Strains_identification/sequences/TestIndelSeeds/classicSeed.txt --bits=0.5G *.fasta
 
-time : 45.60 s  
-space max : 73156 kbytes  
+time : 52.22 s  
+space max : 73124 kbytes  
 
 ### Create the tree
 
@@ -20,6 +20,6 @@ space max : 9996 kbytes
 
 	3) /usr/bin/time -v /home/gsiekani/Documents/Softwares/HowQ/howdesbt build --HowDe --tree=union.sbt --outtree=howde.sbt
 
-time : 106.24 s  
-space max : 497260 kbytes  
+time : 110.48 s  
+space max : 497336 kbytes  
 
