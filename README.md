@@ -30,3 +30,9 @@ space max : 497336 kbytes
 time : 84.04 s  
 space max : 71236 kbytes 
 
+	for i in `ls *.fasta`; do echo ${i%.fasta}; done > listname.txt
+	python3 Results_treatment
+
+
+
+
