@@ -1,4 +1,4 @@
-# ORI
+# ORI (Oxford nanopore Reads Identification: bacterial mode)
 
 ## Example commandes
 
