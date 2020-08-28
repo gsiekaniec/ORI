@@ -25,14 +25,15 @@ space max : 497336 kbytes
 
 ### Query this tree with fasta/q file
 
-	/usr/bin/time -v /home/gsiekani/Documents/Softwares/HowQ/howdesbt queryQ --sort --qgram=/home/gsiekani/Documents/MinION/Strains_identification/sequences/TestIndelSeeds/classicSeed.txt /home/gsiekani/Documents/MinION/Strains_identification/sequences/reads/Mixture_test/3CIRM+JIM/CIRM67_4000_better_than_9.fastq --tree=howde.sbt --threshold=0.6 > ../results/CIRM67_4000_better_than_9.txt
+	/usr/bin/time -v /home/gsiekani/Documents/Softwares/HowQ/howdesbt queryQ --sort --qgram=/home/gsiekani/Documents/MinION/Strains_identification/sequences/TestIndelSeeds/classicSeed.txt /home/gsiekani/Documents/MinION/Strains_identification/sequences/reads/Mixture_test/3CIRM+JIM/CIRM67_4000_better_than_9.fastq --tree=howde.sbt --threshold=0.5 > ../results/CIRM67_4000_better_than_9.txt
 
 time : 84.04 s  
 space max : 71236 kbytes 
 
 	for i in `ls *.fasta`; do echo ${i%.fasta}; done > listname.txt
-	python3 Results_treatment
+	/usr/bin/time -v python3 Results_treatment.py -f ../results/CIRM67_4000_better_than_9.txt -l ../results/listname.txt -o ../results/matrice_CIRM67_0.5.tsv
 
-
+time : 0.53 s  
+space max : 30612 kbytes 
 
 
