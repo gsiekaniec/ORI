@@ -36,4 +36,9 @@ space max : 71236 kbytes
 time : 0.53 s  
 space max : 30612 kbytes 
 
+### Identification/Quantification
+
+	python3 getLength -g ../genomes -o length.txt
+
+	python3 ExtractFromMatrice.py -m ../results/matrice_CIRM67_0.5.tsv -f ../results/CIRM67_better_than_9.txt -le length.txt -l ../results/listname.txt -c /home/gsiekani/.local/bin/clingo_compiled_from_repo -t 55 -n 10
 
