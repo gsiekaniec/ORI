@@ -1,5 +1,4 @@
-# ORI (Oxford nanopore Reads Identification)
-# and the bacterial world
+# ORI (Oxford nanopore Reads Identification) and the bacterial world
 
 ## Example commandes
 
