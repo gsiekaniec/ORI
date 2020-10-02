@@ -2,6 +2,10 @@
 
 ## Example commandes
 
+### Get the length of the genomes
+
+	python3 getLength.py -g ../genomes -o length.txt
+
 ### Create the bloom filter (bf) files
 	
 	/usr/bin/time -v /home/gsiekani/Documents/Softwares/HowQ/howdesbt makebfQ --k=15 --qgram=/home/gsiekani/Documents/MinION/Strains_identification/sequences/TestIndelSeeds/classicSeed.txt --bits=0.5G *.fasta
@@ -37,8 +41,6 @@ time : 0.53 s
 space max : 30612 kbytes 
 
 ### Identification/Quantification
-
-	python3 getLength -g ../genomes -o length.txt
 
 	python3 ExtractFromMatrice.py -m ../results/matrice_CIRM67_0.5.tsv -f ../results/CIRM67_better_than_9.txt -le length.txt -l ../results/listname.txt -c /home/gsiekani/.local/bin/clingo_compiled_from_repo -t 55 -n 10
 
