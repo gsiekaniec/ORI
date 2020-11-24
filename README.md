@@ -22,8 +22,8 @@ It is sometimes necessary to launch the command once in order to see in the Hamm
     path/to/howdesbt distance --list=leafname --threshold=0.0002 --merge 
 
 ### Create the tree
-	
-	path/to/howdesbt cluster --list=leafname --tree=union.sbt --nodename=node{number} --cull
+
+    path/to/howdesbt cluster --list=leafname --tree=union.sbt --nodename=node{number} --cull
 	
 time : 0.07 s  
 space max : 9996 kbytes  
