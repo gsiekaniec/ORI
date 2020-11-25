@@ -2,10 +2,15 @@
 
 ## Installation
 
-Before starting you must install the strains version of HowDeSBT: instruction are in the HowDeSBT_strains repertory.
+Before starting you must install the strains version of HowDeSBT: instruction are in the [HowDeSBT_strains](https://github.com/gsiekaniec/ORI/tree/master/HowDeSBT_strains) repertory.
+
+### Other installation:
+
 networkx must be installed
 
-## First step: creating your own index
+##
+
+### First step: creating your own index
 
 In repertory containning genomes (fasta format) do:
 
