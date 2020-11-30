@@ -12,7 +12,13 @@ Before starting you must install the strains version of HowDeSBT: instruction ar
 
 ### Other installation:
 
-networkx must be installed
+python3 is required to run ORI
+
+networkx must be installed 
+
+clingo must be installed: some help [here](https://lucas.bourneuf.net/blog/asp-tuto.html#installation-manuelle)
+
+clyngor is also required
 
 ## How does it work ?
 
