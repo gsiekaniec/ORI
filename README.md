@@ -14,30 +14,37 @@ Before starting you must install the strains version of HowDeSBT: instruction ar
 
 networkx must be installed
 
-##
+## How does it work ?
 
-### (1) First step: creating your own index
+### (1) First step: create your own index
 
 In repertory containning genomes (fasta format) do:
 
 ### Create the bloom filters (.bf) for each genome
 
-![Drag Racing](attention.png)
+<img src="attention.png" alt="warning" width="30"/> Warning: How DeBT and ORI uses the name of the files to facilitate this use it is preferable not to have . or _ in these names.
 
 	path/to/howdesbt makebfQ --k=15 --qgram=../seed/seedfile.txt --bits=0.5G *.fasta
+
+We get the names of the bf (bloom filter) files used to create the tree:
 
 	ls *.bf > leafname
 
 ### If you want to cluster close strains (not obligatory): the threshold depending on the proximity of your strains
 
 It is sometimes necessary to launch the command once in order to see in the Hamming distance table which threshold would be the most interesting before relaunching to merging the strains.
-        
+    
     path/to/howdesbt distance --list=leafname --threshold=0.0002 --merge 
     path/to/python3 cleanMerge.py -n path/to/leafname -r path/to/repository/with/bf/files
 
 ### Create the tree
 
+If you have merged your files :
 
+    ls *.bf > leafname
+    
+Then :
+    
     path/to/howdesbt cluster --list=leafname --tree=union.sbt --nodename=node{number} --cull
     path/to/howdesbt build --HowDe --tree=union.sbt --outtree=howde.sbt
 
