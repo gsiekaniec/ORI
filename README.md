@@ -1,5 +1,11 @@
 # ORI (Oxford nanopore Reads Identification) and the bacterial world
 
+ORI (Oxford nanopore Reads Identification) is a software allowing, from long nanopore reads, to identify the bacterial strains present in a sample. 
+
+There is two sub-parts: (1) the creation of the index containing the bacterial strains and (2) the query of this index with long reads in order to identify the strains. 
+
+The index is based on the structure implemented in [HowDeSBT](https://github.com/medvedevgroup/HowDeSBT) (Robert S Harris and Paul Medvedev, Improved representation of sequence bloom trees, Bioinformatics, btz662) modified in order to use qgrams (word from spaced seeds) instead of kmers.
+
 ## Installation
 
 Before starting you must install the strains version of HowDeSBT: instruction are in the [HowDeSBT_strains](https://github.com/gsiekaniec/ORI/tree/master/HowDeSBT_strains) repertory.
@@ -10,13 +16,16 @@ networkx must be installed
 
 ##
 
-### First step: creating your own index
+### (1) First step: creating your own index
 
 In repertory containning genomes (fasta format) do:
 
 ### Create the bloom filters (.bf) for each genome
-	
+
+![Drag Racing](attention.png)
+
 	path/to/howdesbt makebfQ --k=15 --qgram=../seed/seedfile.txt --bits=0.5G *.fasta
+
 	ls *.bf > leafname
 
 ### If you want to cluster close strains (not obligatory): the threshold depending on the proximity of your strains
@@ -28,17 +37,14 @@ It is sometimes necessary to launch the command once in order to see in the Hamm
 
 ### Create the tree
 
-    path/to/howdesbt cluster --list=leafname --tree=union.sbt --nodename=node{number} --cull
-	
-time : 0.07 s  
-space max : 9996 kbytes  
 
-	3) /usr/bin/time -v /home/gsiekani/Documents/Softwares/HowQ/howdesbt build --HowDe --tree=union.sbt --outtree=howde.sbt
+    path/to/howdesbt cluster --list=leafname --tree=union.sbt --nodename=node{number} --cull
+    path/to/howdesbt build --HowDe --tree=union.sbt --outtree=howde.sbt
 
 time : 110.48 s  
 space max : 497336 kbytes  
 
-### Query this tree with fasta/q file
+### (2) Query the tree with reads (fasta/q files)
 
 	/usr/bin/time -v /home/gsiekani/Documents/Softwares/HowQ/howdesbt queryQ --sort --qgram=/home/gsiekani/Documents/MinION/Strains_identification/sequences/TestIndelSeeds/classicSeed.txt /home/gsiekani/Documents/MinION/Strains_identification/sequences/reads/Mixture_test/3CIRM+JIM/CIRM67_4000_better_than_9.fastq --tree=howde.sbt --threshold=0.5 > ../results/CIRM67_4000_better_than_9.txt
 
