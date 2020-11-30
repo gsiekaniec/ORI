@@ -16,14 +16,15 @@ In repertory containning genomes (fasta format) do:
 
 ### Create the bloom filters (.bf) for each genome
 	
-	ls *.bf > leafname
 	path/to/howdesbt makebfQ --k=15 --qgram=../seed/seedfile.txt --bits=0.5G *.fasta
+	ls *.bf > leafname
 
 ### If you want to cluster close strains (not obligatory): the threshold depending on the proximity of your strains
 
 It is sometimes necessary to launch the command once in order to see in the Hamming distance table which threshold would be the most interesting before relaunching to merging the strains.
         
     path/to/howdesbt distance --list=leafname --threshold=0.0002 --merge 
+    path/to/python3 cleanMerge.py -n path/to/leafname -r path/to/repository/with/bf/files
 
 ### Create the tree
 
