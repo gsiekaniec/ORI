@@ -25,10 +25,13 @@ In repertory containning genomes (fasta format) do:
 <img src="attention.png" alt="warning" width="30"/> Warning: HowDeSBT and ORI uses the name of the files to facilitate this use it is preferable not to have . or _ in these names.
 
 	path/to/howdesbt makebfQ --k=15 --qgram=../seed/seedfile.txt --bits=0.5G *.fasta
+	
+Now that the bloom filters are created it is no longer necessary to keep the fastas files, **if it is not necessary to keep them**, they can be deleted to save space.
+In addition, if the fastas cannot be completely downloaded on the machine due to lack of space, it is possible to download them little by little and create the filters as you go by deleting the fasta files once in the form of a filter (.bf).
 
 We get the names of the bf (bloom filter) files used to create the tree:
 
-	ls *.bf > leafname
+    ls *.bf > leafname
 
 ### If you want to cluster close strains (not obligatory): the threshold depending on the proximity of your strains
 
@@ -39,31 +42,28 @@ It is sometimes necessary to launch the command once in order to see in the Hamm
 
 ### Create the tree
 
+To run these commands you must be in the directory containing the .bf files.
+
 If you have merged your files :
 
-    ls *.bf > leafname
+    ls *.bf > leafname_merge
     
 Then :
     
     path/to/howdesbt cluster --list=leafname --tree=union.sbt --nodename=node{number} --cull
-    path/to/howdesbt build --HowDe --tree=union.sbt --outtree=howde.sbt
+    
+    #or if you have merged your files
+    path/to/howdesbt cluster --list=leafname_merge --tree=union.sbt --nodename=node{number} --cull
+    
+    path/to/howdesbt build --HowDe --determined,brief --rrr --tree=union.sbt --outtree=howde.sbt
 
-time : 110.48 s  
-space max : 497336 kbytes  
 
 ### (2) Query the tree with reads (fasta/q files)
 
-	/usr/bin/time -v /home/gsiekani/Documents/Softwares/HowQ/howdesbt queryQ --sort --qgram=/home/gsiekani/Documents/MinION/Strains_identification/sequences/TestIndelSeeds/classicSeed.txt /home/gsiekani/Documents/MinION/Strains_identification/sequences/reads/Mixture_test/3CIRM+JIM/CIRM67_4000_better_than_9.fastq --tree=howde.sbt --threshold=0.5 > ../results/CIRM67_4000_better_than_9.txt
-
-time : 84.04 s  
-space max : 71236 kbytes 
+	path/to/howdesbt queryQ --sort --qgram=path/to/seedfile.txt --tree=path/to/howde.sbt --threshold=0.5  path/to/fastq_file > path/to/results.txt
 
 	for i in `ls *.fasta`; do echo ${i%.fasta}; done > listname.txt
-	/usr/bin/time -v python3 Results_treatment.py -f ../results/CIRM67_4000_better_than_9.txt -l ../results/listname.txt -o ../results/matrice_CIRM67_0.5.tsv
-
-time : 0.53 s  
-space max : 30612 kbytes 
-
+	path/to/python3 Results_treatment.py -f ../results/CIRM67_4000_better_than_9.txt -l ../results/listname.txt -o ../results/matrice_CIRM67_0.5.tsv
 
 ### Get the length of the genomes
 
