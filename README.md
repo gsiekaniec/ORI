@@ -22,7 +22,7 @@ In repertory containning genomes (fasta format) do:
 
 ### Create the bloom filters (.bf) for each genome
 
-<img src="attention.png" alt="warning" width="30"/> Warning: How DeBT and ORI uses the name of the files to facilitate this use it is preferable not to have . or _ in these names.
+<img src="attention.png" alt="warning" width="30"/> Warning: HowDeSBT and ORI uses the name of the files to facilitate this use it is preferable not to have . or _ in these names.
 
 	path/to/howdesbt makebfQ --k=15 --qgram=../seed/seedfile.txt --bits=0.5G *.fasta
 
