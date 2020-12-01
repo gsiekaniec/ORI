@@ -14,7 +14,7 @@ As previously said, we replaced kmers by using spaced seeds which introduce donâ
 
 <sub>3. Kucherov G., Noe L., Roytberg, M., A unifying framework for seed sensitivity and its application to subset seeds, Journal of Bioinformatics and Computational Biology, 4(2):553-569, 2006 <http://doi.org/10.1142/S0219720006001977> 
 
-- - - -
+----
 
 ## Installation
 
@@ -29,6 +29,8 @@ networkx must be installed
 clingo must be installed: some help [here](https://lucas.bourneuf.net/blog/asp-tuto.html#installation-manuelle)
 
 clyngor is also required
+
+----
 
 ## How does it work ?
 
