@@ -1,0 +1,14 @@
+package:
+  name: ori
+  version: "0.0.1"
+
+source:
+  path: ../../
+
+requirements:
+  build:
+    - {{ compiler('cxx') }}
+    - python
+    - zlib
+    - make
+    - cmake
