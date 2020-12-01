@@ -8,7 +8,7 @@ endif()
 
 find_package(ZLIB)
 
-if (MAKE_RELEASE)
+if (MAKE_RELEASE AND NOT APPLE)
     set(STATIC_BUILD "-static")
 endif()
 
