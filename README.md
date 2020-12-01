@@ -75,6 +75,12 @@ Once the compressed bloom filters have been created, we can delete those that ar
 
 ### Query the tree with reads (fasta/q files)
 
+In order to facilitate identification it may be wise to remove reads of too poor quality. For this it is possible to use:
+
+	path/to/python3 python_scripts/suppr_bad_quality_read.py -fq path/to/fastq -q min_quality -l min_length
+
+Then we can start the identification:
+
 	path/to/howdesbt queryQ --sort --qgram=path/to/seedfile.txt --tree=path/to/howde.sbt --threshold=0.5  path/to/fastq_file > path/to/results.txt
 
 	path/to/python3 ORI.py matrice -f path/to/results/from/HowDeSBT -l path/to/leafname/or/leafname_merge -o path/to/results/matrix.tsv
