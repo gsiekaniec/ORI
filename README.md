@@ -2,9 +2,11 @@
 
 ORI (Oxford nanopore Reads Identification) is a software allowing, from long nanopore reads, to identify the bacterial strains present in a sample. 
 
-There is two sub-parts: (1) the creation of the index containing the bacterial strains and (2) the query of this index with long reads in order to identify the strains. 
+There are two sub-parts: (1) the creation of the index containing the bacterial strains and (2) the query of this index with long reads in order to identify the strains. 
 
 The index is based on the structure implemented in [HowDeSBT](https://github.com/medvedevgroup/HowDeSBT) (Robert S Harris and Paul Medvedev, Improved representation of sequence bloom trees, Bioinformatics, btz662) modified in order to use qgrams (word from spaced seeds) instead of kmers.
+
+As previously said, in ORI we replaced kmers with spaced seeds which introduce don’t care positions in kmers that are not disturbed by errors.
 
 ## Installation
 
@@ -24,13 +26,13 @@ clyngor is also required
 
 ### First step: create your own index
 
-<img src="attention.png" alt="warning" width="30"/> Warning: fastas must be in .fasta or .fna
+<img src="img/attention.png" alt="warning" width="30"/> Warning: fastas must be in .fasta or .fna
 
-In repertory containning genomes (fasta format) do:
+In repertory containing genomes (fasta format) do:
 
 #### Create the bloom filters (.bf) for each genome
 
-<img src="attention.png" alt="warning" width="30"/> Warning: HowDeSBT and ORI uses the name of the files to facilitate this use it is preferable not to have . or _ in these names.
+<img src="img/attention.png" alt="warning" width="30"/> Warning: HowDeSBT and ORI uses the name of the files to facilitate this use it is preferable not to have . or _ in these names.
 
     path/to/howdesbt makebfQ --k=15 --qgram=../seed/seedfile.txt --bits=0.5G *.fasta
 	
