@@ -247,10 +247,10 @@ void MainCommand::usage(ostream &s,
   //    123456789-123456789-123456789-123456789-123456789-123456789-123456789-123456789
   s << "  <command>           perform a particular command" << endl;
   s << "  --help[=<command>]  get detail about a particular command" << endl;
-  s << "  ?                   list available commands with brief descriptions" << endl;
+  s << "  --?                 list available commands with brief descriptions" << endl;
   s << "  ?<command>          same as --help=<command>" << endl;
   s << endl;
-  s << "For a list of available commands, do \"" << programName << " ?\"." << endl;
+  s << "For a list of available commands, do \"" << programName << " --?\"." << endl;
   s << "For more detailed descriptions of the commands, do \"" << programName << " --help\"." << endl;
 }
 
