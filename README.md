@@ -43,24 +43,24 @@ Then we get the names of the bf (bloom filter) files used to create the tree:
 
 As the last quantification step requires the size of the genomes, it is preferable to calculate it when we have our genomes:
 
-    path/to/python3 getLength.py -g path/to/the/genomes -o path/to/the/output/length.txt
+    path/to/python3 ORI.py length -g path/to/the/genomes -o path/to/the/output/length.txt
 
 #### If you want to cluster close strains (not obligatory): the threshold depending on the proximity of your strains
 
 It is sometimes necessary to launch the command once in order to see in the Hamming distance table which threshold would be the most interesting before relaunching to merging the strains.
     
     path/to/howdesbt distance --list=leafname --threshold=0.0002 --merge 
-    path/to/python3 cleanMerge.py -n path/to/leafname -r path/to/repository/with/bf/files
+    path/to/python3 ORI.py clean_merge -n path/to/leafname -r path/to/repository/with/bf/files -o path/to/the/output/list_number_file.txt
+
+    ls *.bf > leafname_merge
+
+Since the genomes of some strains have been merged, the size of these clusters must also be recalculated:
+
+    path/to/python3 ORI.py merge_length -b path/to/leafname_merge -l path/to/length.txt -c path/to/list_number_file.txt -o path/to/the/output/merge_length.txt
 
 #### Create the tree
 
 To run these commands you must be in the directory containing the .bf files.
-
-If you have merged your files:
-
-    ls *.bf > leafname_merge
-    
-Then:
     
     path/to/howdesbt cluster --list=leafname --tree=union.sbt --nodename=node{number} --cull
     
