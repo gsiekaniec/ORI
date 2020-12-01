@@ -26,13 +26,13 @@ clyngor is also required
 
 ### First step: create your own index
 
-<img src="img/attention.png" alt="warning" width="30"/> Warning: fastas must be in .fasta or .fna
+<img src="img/attention.png" alt="warning" width="30"/> Warning: genomes must be in .fasta or .fna
 
 In repertory containing genomes (fasta format) do:
 
 #### Create the bloom filters (.bf) for each genome
 
-<img src="img/attention.png" alt="warning" width="30"/> Warning: HowDeSBT and ORI uses the name of the files to facilitate this use it is preferable not to have . or _ in these names.
+<img src="img/attention.png" alt="warning" width="30"/> Warning: HowDeSBT and ORI use the name of the files to facilitate this use please avoid "." or "_" in these names.
 
     path/to/howdesbt makebfQ --k=15 --qgram=../seed/seedfile.txt --bits=0.5G *.fasta
 	
