@@ -33,9 +33,14 @@ ExternalProject_add(ZLIB
     GIT_REPOSITORY https://github.com/madler/zlib
     INSTALL_COMMAND "")
 
+If (APPLE)
+    set(DYN_LIB "*.dylib")
+else()
+    set(DYN_LIB "*.so*")
+endif()
 
 add_custom_target(rm_dyn
-    COMMAND rm ${PROJECT_BINARY_DIR}/ZLIB/src/ZLIB-build/*.so*
+    COMMAND rm ${PROJECT_BINARY_DIR}/ZLIB/src/ZLIB-build/${DYN_LIB}
     DEPENDS ZLIB
 )
 
