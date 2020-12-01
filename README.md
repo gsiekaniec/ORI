@@ -45,9 +45,6 @@ In repertory containing reference genomes (fasta format) do:
 <img src="img/attention.png" alt="warning" width="30"/> Warning: HowDeSBT and ORI use the name of the files to facilitate this use, please avoid "." or "_" in these names.
 
     path/to/howdesbt makebfQ --k=15 --qgram=../seed/seedfile.txt --bits=0.5G *.fasta
-	
-Now that the bloom filters are created it is no longer necessary to keep the fastas files, **if it is not necessary to keep them**, they can be deleted to save space.
-In addition, if the fastas cannot be completely downloaded on the machine due to lack of space, it is possible to download them little by little and create the filters as you go by deleting the fasta files once in the form of a filter (.bf).
 
 Then we get the names of the bf (bloom filter) files used to create the tree:
 
@@ -56,6 +53,9 @@ Then we get the names of the bf (bloom filter) files used to create the tree:
 As the last quantification step requires the size of the genomes, it is preferable to calculate it when we have our genomes:
 
     path/to/python3 ORI.py length -g path/to/the/genomes -o path/to/the/output/length.txt
+
+Now that the bloom filters are created it is no longer necessary to keep the fastas files, **if it is not necessary to keep them**, they can be deleted to save space.
+In addition, if the fastas cannot be completely downloaded on the machine due to lack of space, it is possible to download them little by little and create the filters as you go by deleting the fasta files once in the form of a filter (.bf).
 
 #### If you want to cluster close strains (not obligatory): the threshold depending on the proximity of your strains
 
