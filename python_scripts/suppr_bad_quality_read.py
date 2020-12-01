@@ -1,4 +1,5 @@
-"""Reads suppression for reads from fastq below the threshold """
+#!/usr/bin/env python3
+# coding: utf-8
 
 import argparse,os,statistics,math,gzip
 
