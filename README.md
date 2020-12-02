@@ -83,9 +83,13 @@ Once the compressed bloom filters have been created, we can delete those that ar
 
 ### II) Query the tree with reads (fasta/q files)
 
+#### 0.5) Deletion of poor quality reads (not mandatory)
+
 In order to facilitate identification it may be wise to remove reads of too poor quality. For this it is possible to use:
 
 	ORI.py suppr_bad_quality_read -fq path/to/fastq -q min_quality -l min_length
+
+#### 1) Query part and construction of the {strains x reads} matrix 
 
 Then we can start the identification:
 
@@ -93,7 +97,7 @@ Then we can start the identification:
 
 	ORI.py matrice -f path/to/results/from/HowDeSBT -l path/to/leafname/or/leafname_merge -o path/to/results/matrix.tsv
 
-#### Identification/Quantification
+#### 2) Identification/Quantification
 
 	ORI.py identification -m path/to/matrix.tsv -f path/to/results/from/HowDeSBT -le path/to/length.txt -l path/to/leafname/or/leafname_merge -c path/to/clingo/or/$(which clingo)(with the conda installation)
 
