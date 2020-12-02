@@ -101,6 +101,6 @@ Then we can start the identification:
 
 #### Identification/Quantification
 
-	python3 ORI.py identification -m path/to/matrix.tsv -f path/to/results/from/HowDeSBT -le path/to/length.txt -l path/to/leafname/or/leafname_merge -c path/to/clingo/or/$(which clingo)(with conda installation)
+	python3 ORI.py identification -m path/to/matrix.tsv -f path/to/results/from/HowDeSBT -le path/to/length.txt -l path/to/leafname/or/leafname_merge -c path/to/clingo/or/$(which clingo)(with the conda installation)
 
 
