@@ -20,7 +20,16 @@ As previously said, we replaced kmers by using spaced seeds which introduce donâ
 
 ## Installation
 
-Before starting you must install the strains version of HowDeSBT: instruction are in the [HowDeSBT_strains](https://github.com/gsiekaniec/ORI/tree/master/HowDeSBT_strains) repertory.
+The easiest way to install ORI is through [conda](https://github.com/gsiekaniec/ORI/tree/master/conda)
+
+----
+
+### Manual installation
+
+Before starting you must install the strains version of HowDeSBT: 
+
+	cd ORI
+	mkdir build ; cd build ; cmake .. ; make -j8
 
 ### Other installation:
 
