@@ -81,7 +81,7 @@ Once the compressed bloom filters have been created, we can delete those that ar
 
     ls | grep -Pv 'detbrief.rrr.' | grep '.bf' | xargs rm --
 
-### II) Query the tree with reads (fasta/q files)
+### II) Second step: query the tree with reads (fasta/q files)
 
 #### 0.5) Deletion of poor quality reads (not mandatory)
 
