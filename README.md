@@ -29,13 +29,13 @@ Currently the conda package must be built from github source but it will be put 
 
 ## How does it work ?
 
-### First step: create your own index
+### I) First step: create your own index
 
 <img src="img/attention.png" alt="warning" width="30"/> Warning: refrence genomes must be in .fasta or .fna
 
 In repertory containing reference genomes (fasta format) do:
 
-#### Create the bloom filters (.bf) for each genome
+#### 1) Create the bloom filters (.bf) for each genome
 
 <img src="img/attention.png" alt="warning" width="30"/> Warning: HowDeSBT and ORI use the name of the files to facilitate this use, please avoid "." or "_" in these names.
 
@@ -52,7 +52,7 @@ As the last quantification step requires the size of the genomes, it is preferab
 Now that the bloom filters are created it is no longer necessary to keep the fastas files, **if it is not necessary to keep them**, they can be deleted to save space.
 In addition, if the fastas cannot be completely downloaded on the machine due to lack of space, it is possible to download them little by little and create the filters as you go by deleting the fasta files once in the form of a filter (.bf).
 
-#### If you want to cluster close strains (not obligatory): the threshold depending on the proximity of your strains
+#### 1.5) If you want to cluster close strains (not mandatory): the threshold depending on the proximity of your strains
 
 It is sometimes necessary to launch the command once in order to see in the Hamming distance table which threshold would be the most interesting before relaunching to merging the strains.
     
@@ -66,7 +66,7 @@ Since the genomes of some strains have been merged, the size of these clusters m
 
     ORI.py merge_length -b path/to/leafname_merge -l path/to/length.txt -c path/to/list_number_file.txt -o path/to/the/output/merge_length.txt
 
-#### Create the tree
+#### 2) Create the tree
 
 To run these commands you must be in the directory containing the .bf files.
     
@@ -81,7 +81,7 @@ Once the compressed bloom filters have been created, we can delete those that ar
 
     ls | grep -Pv 'detbrief.rrr.' | grep '.bf' | xargs rm --
 
-### Query the tree with reads (fasta/q files)
+### II) Query the tree with reads (fasta/q files)
 
 In order to facilitate identification it may be wise to remove reads of too poor quality. For this it is possible to use:
 
