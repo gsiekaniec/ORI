@@ -73,8 +73,9 @@ In addition, if the fastas cannot be completely downloaded on the machine due to
 
 It is sometimes necessary to launch the command once in order to see in the Hamming distance table which threshold would be the most interesting before relaunching to merging the strains.
     
-    path/to/howdesbt distance --list=leafname --threshold=0.0002 --merge 
-    path/to/python3 ORI.py clean_merge -n path/to/leafname -r path/to/repository/with/bf/files -o path/to/the/output/list_number_file.txt
+    `path/to/howdesbt distance --list=leafname --threshold=0.0002 --merge` 
+    
+    `path/to/python3 ORI.py clean_merge -n path/to/leafname -r path/to/repository/with/bf/files -o path/to/the/output/list_number_file.txt`
 
     ls *.bf > leafname_merge
 
