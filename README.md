@@ -21,26 +21,9 @@ The seed can be found in the [seed](https://github.com/gsiekaniec/ORI/tree/maste
 
 ## Installation
 
-The easiest way to install ORI is through [conda](https://github.com/gsiekaniec/ORI/tree/master/conda)
+The easiest way to install ORI is through [conda](https://github.com/gsiekaniec/ORI/tree/master/conda).
 
-----
-
-### Manual installation
-
-Before starting you must install the strains version of HowDeSBT: 
-
-	cd ORI	
-	mkdir build ; cd build ; cmake .. ; make -j8
-
-### Other installation:
-
-python3 is required to run ORI
-
-networkx must be installed 
-
-clingo must be installed: some help [here](https://lucas.bourneuf.net/blog/asp-tuto.html#installation-manuelle)
-
-clyngor is also required
+Currently the conda package must be built from github source but it will be put on anaconda cloud soon.
 
 ----
 
