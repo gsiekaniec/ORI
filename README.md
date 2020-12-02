@@ -56,7 +56,7 @@ In repertory containing reference genomes (fasta format) do:
 
 <img src="img/attention.png" alt="warning" width="30"/> Warning: HowDeSBT and ORI use the name of the files to facilitate this use, please avoid "." or "_" in these names.
 
-	path/to/howdesbt makebfQ --k=15 --qgram=path/to/seedfile.txt --bits=0.5G *.fasta
+	howdesbt makebfQ --k=15 --qgram=path/to/seedfile.txt --bits=0.5G *.fasta
 
 Then we get the names of the bf (bloom filter) files used to create the tree:
 
@@ -64,7 +64,7 @@ Then we get the names of the bf (bloom filter) files used to create the tree:
 
 As the last quantification step requires the size of the genomes, it is preferable to calculate it when we have our genomes:
 
-	path/to/python3 ORI.py length -g path/to/the/genomes -o path/to/the/output/length.txt
+	ORI.py length -g path/to/the/genomes -o path/to/the/output/length.txt
 	
 Now that the bloom filters are created it is no longer necessary to keep the fastas files, **if it is not necessary to keep them**, they can be deleted to save space.
 In addition, if the fastas cannot be completely downloaded on the machine due to lack of space, it is possible to download them little by little and create the filters as you go by deleting the fasta files once in the form of a filter (.bf).
@@ -73,26 +73,26 @@ In addition, if the fastas cannot be completely downloaded on the machine due to
 
 It is sometimes necessary to launch the command once in order to see in the Hamming distance table which threshold would be the most interesting before relaunching to merging the strains.
     
-	path/to/howdesbt distance --list=leafname --threshold=0.0002 --merge
+	howdesbt distance --list=leafname --threshold=0.0002 --merge
 
-	path/to/python3 ORI.py clean_merge -n path/to/leafname -r path/to/repository/with/bf/files -o path/to/the/output/list_number_file.txt
+	ORI.py clean_merge -n path/to/leafname -r path/to/repository/with/bf/files -o path/to/the/output/list_number_file.txt
 
 	ls *.bf > leafname_merge
 
 Since the genomes of some strains have been merged, the size of these clusters must also be recalculated:
 
-    path/to/python3 ORI.py merge_length -b path/to/leafname_merge -l path/to/length.txt -c path/to/list_number_file.txt -o path/to/the/output/merge_length.txt
+    ORI.py merge_length -b path/to/leafname_merge -l path/to/length.txt -c path/to/list_number_file.txt -o path/to/the/output/merge_length.txt
 
 #### Create the tree
 
 To run these commands you must be in the directory containing the .bf files.
     
-    path/to/howdesbt cluster --list=leafname --tree=union.sbt --nodename=node{number} --cull
+    howdesbt cluster --list=leafname --tree=union.sbt --nodename=node{number} --cull
     
     #or if you have merged your files
-    path/to/howdesbt cluster --list=leafname_merge --tree=union.sbt --nodename=node{number} --cull
+    howdesbt cluster --list=leafname_merge --tree=union.sbt --nodename=node{number} --cull
     
-    path/to/howdesbt build --HowDe --determined,brief --rrr --tree=union.sbt --outtree=howde.sbt
+    howdesbt build --HowDe --determined,brief --rrr --tree=union.sbt --outtree=howde.sbt
    
 Once the compressed bloom filters have been created, we can delete those that are not compressed:
 
@@ -102,16 +102,16 @@ Once the compressed bloom filters have been created, we can delete those that ar
 
 In order to facilitate identification it may be wise to remove reads of too poor quality. For this it is possible to use:
 
-	path/to/python3 python_scripts/suppr_bad_quality_read.py -fq path/to/fastq -q min_quality -l min_length
+	ORI.py suppr_bad_quality_read -fq path/to/fastq -q min_quality -l min_length
 
 Then we can start the identification:
 
-	path/to/howdesbt queryQ --sort --qgram=path/to/seedfile.txt --tree=path/to/howde.sbt --threshold=0.5  path/to/fastq_file > path/to/results.txt
+	howdesbt queryQ --sort --qgram=path/to/seedfile.txt --tree=path/to/howde.sbt --threshold=0.5  path/to/fastq_file > path/to/results.txt
 
-	path/to/python3 ORI.py matrice -f path/to/results/from/HowDeSBT -l path/to/leafname/or/leafname_merge -o path/to/results/matrix.tsv
+	ORI.py matrice -f path/to/results/from/HowDeSBT -l path/to/leafname/or/leafname_merge -o path/to/results/matrix.tsv
 
 #### Identification/Quantification
 
-	python3 ORI.py identification -m path/to/matrix.tsv -f path/to/results/from/HowDeSBT -le path/to/length.txt -l path/to/leafname/or/leafname_merge -c path/to/clingo/or/$(which clingo)(with the conda installation)
+	ORI.py identification -m path/to/matrix.tsv -f path/to/results/from/HowDeSBT -le path/to/length.txt -l path/to/leafname/or/leafname_merge -c path/to/clingo/or/$(which clingo)(with the conda installation)
 
 
