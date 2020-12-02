@@ -20,7 +20,7 @@ include(ExternalProject)
 ExternalProject_add(CROAR
     PREFIX CROAR
     GIT_REPOSITORY https://github.com/RoaringBitmap/CRoaring
-    CMAKE_ARGS -DROARING_BUILD_STATIC=ON
+    CMAKE_ARGS -DROARING_BUILD_STATIC=ON -DENABLE_ROARING_TESTS=OFF
     INSTALL_COMMAND "")
 
 ExternalProject_add(SDSL
