@@ -41,9 +41,15 @@ In repertory containing reference genomes (fasta format) do:
 
 <img src="img/attention.png" alt="warning" width="30"/> Warning: HowDeSBT and ORI use the name of the files to facilitate this use, please avoid ' . ' or ' _ ' in these names.
 
-The seedfile.txt can be found in the [seed](https://github.com/gsiekaniec/ORI/tree/master/seed) directory of ORI. It's a text file containing the seed used on the first line (here 111111001111111).
+The seedfile.txt can be found in the [seed](https://github.com/gsiekaniec/ORI/tree/master/seed) directory of ORI.
 
 	howdesbt makebfQ --k=15 --qgram=path/to/seedfile.txt --bits=0.5G *.fasta
+
+| Parameters | Description | Required |
+|----------|:-------------:|------:|
+| --k | seed length given in --qgram. | Yes |
+| --qgram | file containin the used spaced seed. It's a text file containing the seed used on the first line (here 111111001111111). | Yes |
+| --bits | size of bloom filters. | No. Default: 500000 |
 
 Then we get the names of the bf (bloom filter) files used to create the tree:
 
@@ -53,22 +59,46 @@ As the last quantification step requires the size of the genomes, it is preferab
 
 	ORI.py length -g path/to/the/genomes -o path/to/the/output/length.txt
 	
+| Parameters | Description | Required |
+|----------|:-------------:|------:|
+| -g/--genomes | seed length given in --qgram. | Yes |
+| -o/--outfile | output file containing length of each genome. | No. Default: length.txt |
+	
 Now that the bloom filters are created it is no longer necessary to keep the fastas files, **if it is not necessary to keep them**, they can be deleted to save space.
 In addition, if the fastas cannot be completely downloaded on the machine due to lack of space, it is possible to download them little by little and create the filters as you go by deleting the fasta files once in the form of a filter (.bf).
 
 #### 1.5) If you want to cluster close strains (not mandatory): the threshold depending on the proximity of your strains
 
-It is sometimes necessary to launch the command once in order to see in the Hamming distance table which threshold would be the most interesting before relaunching to merging the strains.
+It is sometimes necessary to launch the command once, **without the --merge option**, in order to see in the Hamming distance table which threshold would be the most interesting before relaunching to merging the strains.
     
 	howdesbt distance --list=leafname --threshold=0.0002 --merge
+	
+| Parameters | Description | Required |
+|----------|:-------------:|------:|
+| --list | list of the bloom filters names (one per line). | Yes |
+| --threshold | Hamming distance threshold between bloom filter for merging them. Floating number between 0 and 1. | Yes |
+| --merge | merge maximal cliques ? | No |
 
 	ORI.py clean_merge -n path/to/leafname -r path/to/repository/with/bf/files -o path/to/the/output/list_number_file.txt
+	
+| Parameters | Description | Required |
+|----------|:-------------:|------:|
+| -n/--names | list of the bloom filters names (one per line). | Yes |
+| -r/--repository | repertory containing the bloom filter file (.bf). | Yes |
+| -o/--outfile | output file. Out file containing one id number, one genome name and the corresponding number of sequence per line. | Yes |
 
 	ls *.bf > leafname_merge
 
 Since the genomes of some strains have been merged, the size of these clusters must also be recalculated:
 
     ORI.py merge_length -b path/to/leafname_merge -l path/to/length.txt -c path/to/list_number_file.txt -o path/to/the/output/merge_length.txt
+
+| Parameters | Description | Required |
+|----------|:-------------:|------:|
+| -b/--bflist | list of the bloom filters names (one per line). | Yes |
+| -l/--lengthfile | file containing length of each genome. It's the output of *ORI.py length* (default : length.txt). | Yes |
+| -c/--correspondance | file containing correspondance between numbers and genomes. It's the output of *ORI.py clean_merge* (default : merge_length.txt). | Yes |
+| -o/--outfile | output file containing length of each genome or genomes cluster. | No. Default = list_number_file.txt |
 
 #### 2) Create the tree
 
