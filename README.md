@@ -61,7 +61,7 @@ As the last quantification step requires the size of the genomes, it is preferab
 	
 | Parameters | Description | Required |
 |----------|:-------------:|------:|
-| -g/--genomes | length of the seed given in --qgram. | Yes |
+| -g/--genomes | path to the repertory containing genome (.fna or .fasta). | Yes |
 | -o/--outfile | output file containing length of each genome. | No. Default: length.txt |
 	
 Now that the bloom filters are created it is no longer necessary to keep the fastas files, **if it is not necessary to keep them**, they can be deleted to save space.
