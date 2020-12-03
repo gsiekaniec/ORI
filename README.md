@@ -193,6 +193,6 @@ The results are not very readable (especially in case of merge of close strains)
 | -f/--file | results file from ORI. | Yes |
 | -n/--number_name_list | file containing correspondance between numbers and genomes. It's the output of *ORI.py clean_merge* (merge_length.txt). | Yes |
 | -o/--output | output file. | No. Default: clean_results.txt |
-| -n/--nbchoices | create a pie chart of the results in png format. | No |
+| --pie_chart | create a pie chart of the results in png format. | No |
 
 
