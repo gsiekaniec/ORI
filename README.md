@@ -46,7 +46,7 @@ The seedfile.txt can be found in the [seed](https://github.com/gsiekaniec/ORI/tr
 	howdesbt makebfQ --k=15 --qgram=path/to/seedfile.txt --bits=0.5G *.fasta
 
 | Parameters | Description |
-|----------|:-------------:|------:|
+|----------|:-------------:|
 | --k | seed length given in --qgram. |
 | --qgram | file containing the used spaced seed. It's a text file containing the seed used on the first line (here 111111001111111). |
 | --bits | size of bloom filters. |
