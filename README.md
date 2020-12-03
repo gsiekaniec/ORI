@@ -148,7 +148,7 @@ In order to facilitate identification it may be wise to remove reads of too poor
 
 Then we can start the identification:
 
-	howdesbt queryQ --sort --qgram=path/to/seedfile.txt --tree=path/to/howde.sbt --threshold=0.5  path/to/fastq_file > path/to/results.txt
+	howdesbt queryQ --sort --qgram=path/to/seedfile.txt --tree=path/to/howde.sbt --threshold=0.5  path/to/fastq_file > path/to/results_howde.txt
 
 | Parameters | Description | 
 |----------|:-------------:|
