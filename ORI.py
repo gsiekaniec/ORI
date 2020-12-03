@@ -216,6 +216,12 @@ if __name__ == '__main__':
     default='clean_results.txt', 
     help='Output file.'
     )
+    
+    optional_beautiful_results.add_argument("--pie_chart", 
+    required=False, 
+    action="store_true", 
+    help="create a pie chart of the results ?"
+    )
 
 
     parser_beautiful_results.set_defaults(parser_matrix=False, parser_identification=False,parser_length=False,parser_merge_length=False, parser_clean=False, parser_suppr_reads=False, parser_beautiful_results=True)

@@ -87,7 +87,8 @@ def main(args):
     
     percents_list, strains_list, label = improve_results(args.file,args.number_name_list)
     
-    create_graph(percents_list, strains_list, label)
+    if args.pie_chart:
+        create_graph(percents_list, strains_list, label)
     
     create_output_file(percents_list, strains_list,args.output)
     
