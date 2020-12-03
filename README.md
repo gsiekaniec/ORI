@@ -135,7 +135,7 @@ Once the compressed bloom filters have been created, we can delete those that ar
 
 In order to facilitate identification it may be wise to remove reads of too poor quality. For this it is possible to use:
 
-	ORI.py suppr_bad_reads -fq path/to/fastq -q min_quality -l min_length
+	ORI.py suppr_bad_reads -fq path/to/fastq -q min_quality_value -l min_length_value
 
 | Parameters | Description | Required |
 |----------|:-------------:|------:|
