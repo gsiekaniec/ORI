@@ -47,7 +47,7 @@ The seedfile.txt can be found in the [seed](https://github.com/gsiekaniec/ORI/tr
 
 | Parameters | Description |
 |----------|:-------------:|
-| --k | seed length given in --qgram. |
+| --k | length of the seed given in --qgram. |
 | --qgram | file containing the used spaced seed. It's a text file containing the seed used on the first line (here 111111001111111). |
 | --bits | size of bloom filters. |
 
@@ -61,7 +61,7 @@ As the last quantification step requires the size of the genomes, it is preferab
 	
 | Parameters | Description | Required |
 |----------|:-------------:|------:|
-| -g/--genomes | seed length given in --qgram. | Yes |
+| -g/--genomes | length of the seed given in --qgram. | Yes |
 | -o/--outfile | output file containing length of each genome. | No. Default: length.txt |
 	
 Now that the bloom filters are created it is no longer necessary to keep the fastas files, **if it is not necessary to keep them**, they can be deleted to save space.
