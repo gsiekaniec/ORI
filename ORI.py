@@ -27,7 +27,7 @@ if __name__ == '__main__':
     
     subparsers = parser.add_subparsers(help='Functions')
     
-    #Matrice parser
+    #Matrix parser
     
     parser_matrix = subparsers.add_parser('matrix',help='Create the {genes X strains} matrix using the results from HowDeSBT')
     
@@ -40,11 +40,11 @@ if __name__ == '__main__':
     )
     required_matrix.add_argument('--list_name', '-l', metavar='IN_FILE2', type=str, 
     required=True, 
-    help='Name of strains in the same order than in matrice.'
+    help='Name of strains in the same order than in matrix.'
     )
     optional_matrix.add_argument('--output', '-out', dest='out', metavar='OUT_FILE' , 
-    default='matrice.tsv',
-    help='Output matrice file.')
+    default='matrix.tsv',
+    help='Output matrix file.')
 
     parser_matrix.set_defaults(parser_matrix=True, parser_identification=False,parser_length=False,parser_merge_length=False, parser_clean=False, parser_suppr_reads=True)
 
@@ -57,7 +57,7 @@ if __name__ == '__main__':
     
     required_identification.add_argument('--matrix', '-m', dest='matrix', metavar='IN_FILE', 
     required=True, 
-    help='Matrice file strains X reads.'
+    help='Matrix file strains X reads.'
     )
     required_identification.add_argument('--clingo_path', '-clingo', dest='clingo_path', metavar='CLINGO_PASS', 
     required=True, 
@@ -73,7 +73,7 @@ if __name__ == '__main__':
     )
     required_identification.add_argument('--listname', '-l', dest='listname', metavar='IN_FILE4', 
     required=True, 
-    help='Name of strains in the same order than in matrice.'
+    help='Name of strains in the same order than in matrix.'
     )
     optional_identification.add_argument('--output', '-o', dest='output', metavar='OUTPUT_FILE', 
     default='out.txt', 
