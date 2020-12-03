@@ -175,10 +175,10 @@ Then we can start the identification:
 
 | Parameters | Description | Required |
 |----------|:-------------:|------:|
-| -m/-- | {strains X reads} matrice file. | Yes |
+| -m/--matrix | {strains X reads} matrice file. | Yes |
 | -f/--file | results file from Howde output. | Yes |
-| -le/-- | file with one genome and is length per line. It's the output of *ORI.py length* or *ORI.py merge_length*. | Yes |
-| -l/-- | list of the bloom filters names (one per line) in the same order than in the matrix. | Yes |
+| -le/--length | file with one genome and is length per line. It's the output of *ORI.py length* or *ORI.py merge_length*. | Yes |
+| -l/--listname | list of the bloom filters names (one per line) in the same order than in the matrix. | Yes |
 | -c/--clingo_path | clingo path. With a conda installation this path is in $(which clingo). | Yes |
 | -o/--output | output results file. | No. Default: out.txt |
 | -t/--threshold | Minimum percent value in the matrix for association between reads and species (between 0 and 100). | No. Default: 50 |
