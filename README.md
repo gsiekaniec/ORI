@@ -45,11 +45,11 @@ The seedfile.txt can be found in the [seed](https://github.com/gsiekaniec/ORI/tr
 
 	howdesbt makebfQ --k=15 --qgram=path/to/seedfile.txt --bits=0.5G *.fasta
 
-| Parameters | Description | Required |
+| Parameters | Description |
 |----------|:-------------:|------:|
-| --k | seed length given in --qgram. | Yes |
-| --qgram | file containin the used spaced seed. It's a text file containing the seed used on the first line (here 111111001111111). | Yes |
-| --bits | size of bloom filters. | No. Default: 500000 |
+| --k | seed length given in --qgram. |
+| --qgram | file containing the used spaced seed. It's a text file containing the seed used on the first line (here 111111001111111). |
+| --bits | size of bloom filters. |
 
 Then we get the names of the bf (bloom filter) files used to create the tree:
 
@@ -73,11 +73,11 @@ It is sometimes necessary to launch the command once, **without the --merge opti
     
 	howdesbt distance --list=leafname --threshold=0.0002 --merge
 	
-| Parameters | Description | Required |
-|----------|:-------------:|------:|
-| --list | list of the bloom filters names (one per line). | Yes |
-| --threshold | Hamming distance threshold between bloom filter for merging them. Floating number between 0 and 1. | Yes |
-| --merge | merge maximal cliques ? | No |
+| Parameters | Description |
+|----------|:-------------:|
+| --list | list of the bloom filters names (one per line). |
+| --threshold | Hamming distance threshold between bloom filter for merging them. Floating number between 0 and 1. |
+| --merge | merge maximal cliques ? |
 
 	ORI.py clean_merge -n path/to/leafname -r path/to/repository/with/bf/files -o path/to/the/output/list_number_file.txt
 	
@@ -98,7 +98,7 @@ Since the genomes of some strains have been merged, the size of these clusters m
 | -b/--bflist | list of the bloom filters names (one per line). | Yes |
 | -l/--lengthfile | file containing length of each genome. It's the output of *ORI.py length* (default : length.txt). | Yes |
 | -c/--correspondance | file containing correspondance between numbers and genomes. It's the output of *ORI.py clean_merge* (default : merge_length.txt). | Yes |
-| -o/--outfile | output file containing length of each genome or genomes cluster. | No. Default = list_number_file.txt |
+| -o/--outfile | output file containing length of each genome or genomes cluster. | No. Default: list_number_file.txt |
 
 #### 2) Create the tree
 
@@ -109,8 +109,21 @@ To run these commands you must be in the directory containing the .bf files.
     #or if you have merged your files
     howdesbt cluster --list=leafname_merge --tree=union.sbt --nodename=node{number} --cull
     
-    howdesbt build --HowDe --determined,brief --rrr --tree=union.sbt --outtree=howde.sbt
-   
+| Parameters | Description | 
+|----------|:-------------:|
+| --list | list of the bloom filters names (one per line). |
+| --tree | name for tree toplogy file. |
+| --nodename | filename template for internal tree nodes this must contain the substring {number}. |
+| --cull | remove nodes from the binary tree; remove those for which saturation of determined is more than 2 standard deviations. |
+    
+    howdesbt build --howde --tree=union.sbt --outtree=howde.sbt
+
+| Parameters | Description |
+|----------|:-------------:|
+| --howde | create tree nodes as determined/how, but only store active bits. Create the nodes as rrr-compressed bit vector(s). |
+| --tree | name for tree toplogy file. |
+| --outtree | name of topology file to write tree consisting of the filters built. |
+  
 Once the compressed bloom filters have been created, we can delete those that are not compressed:
 
     ls | grep -Pv 'detbrief.rrr.' | grep '.bf' | xargs rm --
@@ -123,16 +136,48 @@ In order to facilitate identification it may be wise to remove reads of too poor
 
 	ORI.py suppr_bad_quality_read -fq path/to/fastq -q min_quality -l min_length
 
+| Parameters | Description | Required |
+|----------|:-------------:|------:|
+| -fq/--fastq | fastq file. | Yes |
+| -q/--qualityMin | Minimum quality (Phred score) threshold to save a read. | No. Default: 9 |
+| -l/--lengthMin | minimum length threshold to save a read. | No. Default: 2000 |
+| --gzip | use of compressed fastq: fastq.gz. | No |
+
 #### 1) Query part and construction of the {strains x reads} matrix 
 
 Then we can start the identification:
 
 	howdesbt queryQ --sort --qgram=path/to/seedfile.txt --tree=path/to/howde.sbt --threshold=0.5  path/to/fastq_file > path/to/results.txt
 
-	ORI.py matrice -f path/to/results/from/HowDeSBT -l path/to/leafname/or/leafname_merge -o path/to/results/matrix.tsv
+| Parameters | Description | 
+|----------|:-------------:|
+| --sort | sort matched leaves by the number of query qgrams present, and report the number of qgrams present. |
+| --qgram | file containing the used spaced seed. It's a text file containing the seed used on the first line (here 111111001111111). |
+| --tree | name of the tree toplogy file (howde.sbt). |
+| --threshold | fraction of query qgrams that must be present in a leaf to be considered as a match; this must be between 0 and 1. |
+
+	ORI.py matrix -f path/to/results/from/HowDeSBT -l path/to/leafname/or/leafname_merge -o path/to/results/matrix.tsv
+
+| Parameters | Description | Required |
+|----------|:-------------:|------:|
+| -f/--file | Results file from HowDe output. | Yes |
+| -l/--list_name |  list of the bloom filters names (one per line) in the same order than in the matrix. | Yes |
+| -out/--output | output {strains x reads} matrice file.. | No. Default: matrice.tsv |
 
 #### 2) Identification/Quantification
 
 	ORI.py identification -m path/to/matrix.tsv -f path/to/results/from/HowDeSBT -le path/to/length.txt -l path/to/leafname/or/leafname_merge -c path/to/clingo/or/$(which clingo)(with the conda installation)
+
+| Parameters | Description | Required |
+|----------|:-------------:|------:|
+| -m/-- | {strains X reads} matrice file. | Yes |
+| -f/--file | results file from Howde output. | Yes |
+| -le/-- | file with one genome and is length per line. It's the output of *ORI.py length* or *ORI.py merge_length*. | Yes |
+| -l/-- | list of the bloom filters names (one per line) in the same order than in the matrix. | Yes |
+| -c/--clingo_path | clingo path. With a conda installation this path is in $(which clingo). | Yes |
+| -o/--output | output results file. | No. Default: out.txt |
+| -t/--threshold | Minimum percent value in the matrix for association between reads and species (between 0 and 100). | No. Default: 50 |
+| -n/--nbchoices | Only the nbchoices maximum values of a row are considered. Warning, must be less or equal to the number of species. | No. Default: 12 |
+
 
 
