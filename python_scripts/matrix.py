@@ -27,7 +27,10 @@ def iter_file(file: str, listbf: list, grid) :
                         strain = str(l.split('.bf')[0])
                     else:
                         strain = str(l.split(' ')[0].split('.bf')[0])
+                else:
+                    strain = l.split(' ')[0]
                 number = float(l.split(' ')[2])
+                
                 li = listbf[strain]
                 grid[col,li] = number
     return grid
