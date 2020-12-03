@@ -146,9 +146,13 @@ In order to facilitate identification it may be wise to remove reads of too poor
 
 #### 1) Query part and construction of the {strains x reads} matrix 
 
+As we show in the publication (coming soon), ORI's identification  is better with 4000 reads than with 16000 due to noise related to sequencing errors. It is therefore advisable to reduce the number of reads with for example:
+
+	head -n 16000 fastq_file > fastq_file_4000_reads.fq
+
 Then we can start the identification:
 
-	howdesbt queryQ --sort --qgram=path/to/seedfile.txt --tree=path/to/howde.sbt --threshold=0.5  path/to/fastq_file > path/to/results_howde.txt
+	howdesbt queryQ --sort --qgram=path/to/seedfile.txt --tree=path/to/howde.sbt --threshold=0.5  fastq_file_4000_reads > path/to/results_howde.txt
 
 | Parameters | Description | 
 |----------|:-------------:|
@@ -167,7 +171,7 @@ Then we can start the identification:
 
 #### 2) Identification/Quantification
 
-	ORI.py identification -m path/to/matrix.tsv -f path/to/results/from/HowDeSBT -le path/to/length.txt -l path/to/leafname/or/leafname_merge -c path/to/clingo/or/$(which clingo)(with the conda installation)
+	ORI.py identification -m path/to/matrix.tsv -f path/to/results/from/HowDeSBT -le path/to/length.txt/or/merge_length.txt -l path/to/leafname/or/leafname_merge -c path/to/clingo/or/$(which clingo)(with the conda installation)
 
 | Parameters | Description | Required |
 |----------|:-------------:|------:|
