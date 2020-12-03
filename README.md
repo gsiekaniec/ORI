@@ -184,8 +184,9 @@ Then we can start the identification:
 | -t/--threshold | Minimum percent value in the matrix for association between reads and species (between 0 and 100). | No. Default: 50 |
 | -n/--nbchoices | Only the nbchoices maximum values of a row are considered. Warning, must be less or equal to the number of species. | No. Default: 12 |
 
-	ORI.py beautiful_results -f path/to/results/from/ORI -n path/to/list_number_file.txt --pie_chart
-	
+The results are not very readable (especially in case of merge of close strains), it is possible to have cleaner results:
+
+	ORI.py beautiful_results -f path/to/results/from/ORI -n path/to/list_number_file.txt --pie_chart	
 
 | Parameters | Description | Required |
 |----------|:-------------:|------:|
@@ -193,4 +194,5 @@ Then we can start the identification:
 | -n/--number_name_list | file containing correspondance between numbers and genomes. It's the output of *ORI.py clean_merge* (merge_length.txt). | Yes |
 | -o/--output | output file. | No. Default: clean_results.txt |
 | -n/--nbchoices | create a pie chart of the results in png format. | No |
+
 
