@@ -8,6 +8,7 @@ import python_scripts.length
 import python_scripts.merge_length
 import python_scripts.clean_merge
 import python_scripts.suppr_bad_quality_reads
+import python_scripts.beautiful_results
 
 __version__ = '0.0.1'
 
@@ -46,7 +47,7 @@ if __name__ == '__main__':
     default='matrix.tsv',
     help='Output matrix file.')
 
-    parser_matrix.set_defaults(parser_matrix=True, parser_identification=False,parser_length=False,parser_merge_length=False, parser_clean=False, parser_suppr_reads=True)
+    parser_matrix.set_defaults(parser_matrix=True, parser_identification=False,parser_length=False,parser_merge_length=False, parser_clean=False, parser_suppr_reads=False, parser_beautiful_results=False)
 
     #Identification parser
 
@@ -88,7 +89,7 @@ if __name__ == '__main__':
     help='Only the nbchoices maximum values of a row are considered. Warning, must be less or equal to the number of species.'
     )    
 
-    parser_identification.set_defaults(parser_identification=True,parser_matrix=False,parser_length=False,parser_merge_length=False, parser_clean=False, parser_suppr_reads=True)
+    parser_identification.set_defaults(parser_identification=True,parser_matrix=False,parser_length=False,parser_merge_length=False, parser_clean=False, parser_suppr_reads=False, parser_beautiful_results=False)
 
     #Length parser
 
@@ -108,7 +109,7 @@ if __name__ == '__main__':
     )
 
 
-    parser_length.set_defaults(parser_identification=False,parser_matrix=False,parser_length=True,parser_merge_length=False, parser_clean=False, parser_suppr_reads=True)
+    parser_length.set_defaults(parser_identification=False,parser_matrix=False,parser_length=True,parser_merge_length=False, parser_clean=False, parser_suppr_reads=False, parser_beautiful_results=False)
 
     #Merge length parser
 
@@ -136,7 +137,7 @@ if __name__ == '__main__':
     help='Out file containing one genome name and length per line.'
     )
     
-    parser_merge_length.set_defaults(parser_identification=False,parser_matrix=False,parser_length=False,parser_merge_length=True, parser_clean=False, parser_suppr_reads=True)
+    parser_merge_length.set_defaults(parser_identification=False,parser_matrix=False,parser_length=False,parser_merge_length=True, parser_clean=False, parser_suppr_reads=False, parser_beautiful_results=False)
 
     #Clean bf and create the number x bf list
     
@@ -160,7 +161,7 @@ if __name__ == '__main__':
     help='Out file containing one id number and one genome name per line.'
     )
 
-    parser_clean.set_defaults(parser_matrix=False, parser_identification=False,parser_length=False,parser_merge_length=False, parser_clean=True, parser_suppr_reads=True)
+    parser_clean.set_defaults(parser_matrix=False, parser_identification=False,parser_length=False,parser_merge_length=False, parser_clean=True, parser_suppr_reads=False, parser_beautiful_results=False)
 
     #Supression of poor quality reads
     
@@ -191,7 +192,33 @@ if __name__ == '__main__':
     )
 
 
-    parser_suppr_reads.set_defaults(parser_matrix=False, parser_identification=False,parser_length=False,parser_merge_length=False, parser_clean=False, parser_suppr_reads=True)
+    parser_suppr_reads.set_defaults(parser_matrix=False, parser_identification=False,parser_length=False,parser_merge_length=False, parser_clean=False, parser_suppr_reads=True, parser_beautiful_results=False)
+
+
+    #Get beautiful results
+    
+    parser_beautiful_results = subparsers.add_parser('beautiful_results',help='Rewrite the results to make it easier to understand.')
+    
+    required_beautiful_results = parser_beautiful_results.add_argument_group('required arguments')
+    optional_beautiful_results = parser_beautiful_results.add_argument_group('optional arguments')
+
+    required_beautiful_results.add_argument("--file", "-f", metavar='INPUT_FILE',
+    required=True, 
+    help="ORI's results file"
+    )
+    
+    required_beautiful_results.add_argument("--number_name_list", "-n", metavar='LIST_FILE',
+    required=True,
+    help='File containing one id number and one genome name per line.'
+    )
+    
+    optional_beautiful_results.add_argument('--output', '-o', dest='output', metavar='OUTPUT_FILE', 
+    default='clean_results.txt', 
+    help='Output file.'
+    )
+
+
+    parser_beautiful_results.set_defaults(parser_matrix=False, parser_identification=False,parser_length=False,parser_merge_length=False, parser_clean=False, parser_suppr_reads=False, parser_beautiful_results=True)
 
 
     #End parser#######
@@ -211,6 +238,8 @@ if __name__ == '__main__':
             python_scripts.clean_merge.main(args)
         elif args.parser_suppr_reads:
             python_scripts.suppr_bad_quality_reads.main(args)
+        elif args.parser_beautiful_results:
+            python_scripts.beautiful_results.main(args)
     else :
         parser.print_help()
 
