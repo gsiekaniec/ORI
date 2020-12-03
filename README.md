@@ -106,7 +106,8 @@ To run these commands you must be in the directory containing the .bf files.
     
     howdesbt cluster --list=leafname --tree=union.sbt --nodename=node{number} --cull
     
-    #or if you have merged your files
+<img src="img/attention.png" alt="warning" width="30"/> Warning: if you have merged your files use:
+    
     howdesbt cluster --list=leafname_merge --tree=union.sbt --nodename=node{number} --cull
     
 | Parameters | Description | 
@@ -128,7 +129,7 @@ Once the compressed bloom filters have been created, we can delete those that ar
 
     ls | grep -Pv 'detbrief.rrr.' | grep '.bf' | xargs rm --
 
-### II) Second step: query the tree with reads (fasta/q files)
+### II) Second step: query the tree with reads (fastq files)
 
 #### 0.5) Deletion of poor quality reads (not mandatory)
 
