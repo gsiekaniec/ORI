@@ -9,7 +9,9 @@ There are two sub-parts: (1) the creation of the index containing the bacterial 
 The index is based on the structure implemented in [HowDeSBT](https://github.com/medvedevgroup/HowDeSBT) [1] modified in order to use qgrams (word from spaced seeds) instead of kmers.
 
 As previously said, we replaced kmers by using spaced seeds which introduce don’t care positions in kmers that are not disturbed by errors. To select the best seed pattern for classification of long reads we used the [iedera](https://github.com/laurentnoe/iedera) software [2][3]. The best seed for our classification tools seems to be the following spaced seed of size 15 and weight 13: 111111001111111. This seed is then applied to words of size 15 resulting in qgrams used instead of kmers. 
-The seed can be found in the [seed](https://github.com/gsiekaniec/ORI/tree/master/seed) directory of ORI
+The seed can be found in the [seed](https://github.com/gsiekaniec/ORI/tree/master/seed) directory of ORI.
+
+The preconstructed indexes for *Streptococcus thermophilus* strains are available in the ORI github in the directory: [preconstructed_indexes](https://github.com/gsiekaniec/ORI/tree/master/preconstructed_indexes) directory of ORI.
 
 <sub>1. Robert S Harris and Paul Medvedev, Improved representation of sequence bloom trees, Bioinformatics, btz662 <10.1093/bioinformatics/btz662>
 
@@ -37,7 +39,9 @@ In repertory containing reference genomes (fasta format) do:
 
 #### 1) Create the bloom filters (.bf) for each genome
 
-<img src="img/attention.png" alt="warning" width="30"/> Warning: HowDeSBT and ORI use the name of the files to facilitate this use, please avoid "." or "_" in these names.
+<img src="img/attention.png" alt="warning" width="30"/> Warning: HowDeSBT and ORI use the name of the files to facilitate this use, please avoid ' . ' or ' _ ' in these names.
+
+The seedfile.txt can be found in the [seed](https://github.com/gsiekaniec/ORI/tree/master/seed) directory of ORI. It's a text file containing the seed used on the first line (here 111111001111111).
 
 	howdesbt makebfQ --k=15 --qgram=path/to/seedfile.txt --bits=0.5G *.fasta
 
