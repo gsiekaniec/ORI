@@ -2,6 +2,8 @@
 # -*- coding: utf-8 -*-
 
 import matplotlib.pyplot as plt
+import matplotlib
+matplotlib.use('Agg')
 import numpy as np
 
 def improve_results(file,number_name_list):
