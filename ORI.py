@@ -1,6 +1,11 @@
 #!/usr/bin/env python3
 # coding: utf-8
 
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+#   ORI
+#   Authors: G. Siekaniec
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
 import argparse 
 import python_scripts.matrix
 import python_scripts.identification

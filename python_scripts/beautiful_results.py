@@ -76,11 +76,14 @@ def create_graph(percents_list, strains_list, label):
 def create_output_file(percents_list, strains_list,output):
     with open(output,'w') as o:
         o.write(f'***** ORI *****\n')
+        print(f'***** ORI *****\n')
         for i,n in enumerate(percents_list):
             s=''
             if '\n' in strains_list[i]:                   
                 s = ' , '.join(strains_list[i].split('\n'))
+            print(f'{n}%\t{s}\n')
             o.write(f'{n}%\t{s}\n')
+        print(f'***************\n')
         o.write(f'***************\n')
     
 def main(args):
