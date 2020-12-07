@@ -39,8 +39,6 @@ In repertory containing reference genomes (fasta format) do:
 
 #### 1) Create the bloom filters (.bf) for each genome
 
-<img src="img/attention.png" alt="warning" width="30"/> Warning: HowDeSBT and ORI use the name of the files to facilitate this use, please avoid ' . ' or ' _ ' in these names.
-
 The seedfile.txt can be found in the [seed](https://github.com/gsiekaniec/ORI/tree/master/seed) directory of ORI.
 
 	howdesbt makebfQ --k=15 --qgram=path/to/seedfile.txt --bits=0.5G *.fasta
