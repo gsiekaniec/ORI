@@ -2,6 +2,8 @@
 # -*- coding: utf-8 -*-
 
 import matplotlib.pyplot as plt
+import matplotlib
+matplotlib.use('Agg')
 
 def threshold_determination_help (matrix,threshold):
     
