@@ -2,6 +2,8 @@
 # coding: utf-8
 
 import argparse 
+import matplotlib
+matplotlib.use('agg')
 import python_scripts.matrix
 import python_scripts.identification
 import python_scripts.length
