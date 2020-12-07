@@ -104,11 +104,7 @@ Since the genomes of some strains have been merged, the size of these clusters m
 
 To run these commands you must be in the directory containing the .bf files.
     
-    howdesbt cluster --list=leafname --tree=union.sbt --nodename=node{number} --cull
-    
-<img src="img/attention.png" alt="warning" width="30"/> Warning: if you have merged your files use:
-    
-    howdesbt cluster --list=leafname_merge --tree=union.sbt --nodename=node{number} --cull
+    howdesbt cluster --list=leafname/or/leafname_merge --tree=union.sbt --nodename=node{number} --cull
     
 | Parameters | Description | 
 |----------|:-------------:|
