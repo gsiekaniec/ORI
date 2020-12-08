@@ -67,13 +67,29 @@ In addition, if the fastas cannot be completely downloaded on the machine due to
 
 #### 1.5) If you want to cluster close strains (not mandatory): the threshold depending on the proximity of your strains
 
-It is sometimes necessary to launch the command once, **without the --merge option**, in order to see in the Hamming distance table which threshold would be the most interesting before relaunching to merging the strains.
-    
-	howdesbt distance --list=leafname --threshold=0.0002 --merge
+It is most of the time necessary to launch the command once, **without the --merge option**, in order to see in the Hamming distance table which threshold would be the most interesting before relaunching to merging the strains. 
+	
+	howdesbt distance --list=leafname
+
+| Parameters | Description |
+|----------|:-------------:|
+| --list | list of the bloom filters names (one per line). |
+	
+This step (`ORI.py threshold_determination`) makes it possible to visualize the distribution of the distances between the strains of the index. In this way it is possible to determine a threshold to merge the close strains. The output is the figure **threshold_determination.png**.
+	
+	ORI.py threshold_determination -m path/to/hamming_matrix.tsv -t 0.0002
+	
+| Parameters | Description | Required |
+|----------|:-------------:|------:|
+| -m/--matrix | Path to the hamming distance matrix. It's the output of the first *howdesbt distance* | Yes | 
+| -t/--threshold | Threshold that we want to set to merge close genomes. Be careful not to set this threshold too high or too low. | No. Default: 0.0002 |
+	
+	howdesbt distance --list=leafname --threshold=0.0002 --matrix=hamming_matrix.bin --merge
 	
 | Parameters | Description |
 |----------|:-------------:|
 | --list | list of the bloom filters names (one per line). |
+| --matrix | Path to the hamming distance matrix. It's the output of the first *howdesbt distance* |
 | --threshold | Hamming distance threshold between bloom filter for merging them. Floating number between 0 and 1. |
 | --merge | merge maximal cliques ? |
 
