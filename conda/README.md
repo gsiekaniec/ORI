@@ -1,10 +1,18 @@
+## Install from anaconda cloud
+
+```bash
+conda create -p ori_env
+conda activate ori_env
+conda install -c gsiekaniec -c conda-forge ori
+```
+
 ## Build package from github
 
 ```bash
 git clone https://github.com/gsiekaniec/ORI
-conda env create -p ./ori-env --file ./ORI/conda/environment.yml
+conda env create -p ./ori-env 
 conda activate ./ori-env
-conda install conda-build
+conda install conda-build -c conda-forge
 conda-build ./ORI/conda/ori
 ```
 

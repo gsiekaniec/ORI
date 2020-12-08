@@ -22,3 +22,13 @@ requirements:
     - networkx==2.5
     - pygraphviz==1.3
     - matplotlib==3.3.3
+
+about:
+  home: https://github.com/gsiekaniec/ORI
+  license: MIT
+  summary: ORI (Oxford nanopore Reads Identification) is a software allowing, from long nanopore reads, to identify the bacterial strains present in a sample.
+  dev_url: https://github.com/gsiekaniec/ORI
+
+extra:
+  maintainers:
+    - G. Siekaniec, gregoire.siekaniec@inria.fr
