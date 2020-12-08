@@ -25,7 +25,9 @@ The preconstructed indexes for *Streptococcus thermophilus* strains are availabl
 
 The easiest way to install ORI is through [conda](https://github.com/gsiekaniec/ORI/tree/master/conda).
 
-Currently the conda package must be built from github source but it will be put on anaconda cloud soon.
+	conda create -p ori_env
+	conda activate ori_env
+	conda install -c gsiekaniec -c conda-forge ori
 
 ----
 
