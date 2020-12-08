@@ -81,16 +81,16 @@ This step (`ORI.py threshold_determination`) makes it possible to visualize the 
 	
 | Parameters | Description | Required |
 |----------|:-------------:|------:|
-| -m/--matrix | Path to the hamming distance matrix. It's the output of the first *howdesbt distance* | Yes | 
-| -t/--threshold | Threshold that we want to set to merge close genomes. Be careful not to set this threshold too high or too low. | No. Default: 0.0002 |
+| -m/--matrix | path to the hamming distance matrix. It's the output of the first *howdesbt distance* | Yes | 
+| -t/--threshold | threshold that we want to set to merge close genomes. Be careful not to set this threshold too high or too low. Floating number between 0 and 1. | No. Default: 0.0002 |
 	
 	howdesbt distance --list=leafname --threshold=0.0002 --matrix=hamming_matrix.bin --merge
 	
 | Parameters | Description |
 |----------|:-------------:|
 | --list | list of the bloom filters names (one per line). |
-| --matrix | Path to the hamming distance matrix. It's the output of the first *howdesbt distance* |
-| --threshold | Hamming distance threshold between bloom filter for merging them. Floating number between 0 and 1. |
+| --matrix | path to the hamming distance matrix. It's the output of the first *howdesbt distance* |
+| --threshold | hamming distance threshold between bloom filter for merging them. Floating number between 0 and 1. |
 | --merge | merge maximal cliques ? |
 
 	ORI.py clean_merge -n path/to/leafname -r path/to/repository/with/bf/files -o path/to/the/output/list_number_file.txt
