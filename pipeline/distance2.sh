@@ -1,6 +1,9 @@
 #!/bin/bash
 
-source ./config.sh
+#no effect, only to draw the threshold on the graph 
+THRESHOLD="0.0002" 
 
-howdesbt distance --list=leafname --threshold=${MERGE_THRESHOLD}
-#ORI.py threshold_selection TODO
+echo "Compute bf distance..."
+howdesbt distance --list=leafname
+ORI.py threshold_determination -m hamming_matrix.tsv -t ${THRESHOLD}
+echo "Done: threshold.png"
