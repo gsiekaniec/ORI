@@ -16,7 +16,7 @@ import python_scripts.merge_length
 import python_scripts.clean_merge
 import python_scripts.suppr_bad_quality_reads
 import python_scripts.beautiful_results
-import python_scripts.threshold_determination
+import python_scripts.threshold
 
 __version__ = '0.0.1'
 
@@ -55,7 +55,7 @@ if __name__ == '__main__':
     default='matrix.tsv',
     help='Output matrix file.')
 
-    parser_matrix.set_defaults(parser_matrix=True, parser_identification=False,parser_length=False,parser_merge_length=False, parser_clean=False, parser_suppr_reads=False, parser_beautiful_results=False, parser_threshold_determination=False)
+    parser_matrix.set_defaults(parser_matrix=True, parser_identification=False,parser_length=False,parser_merge_length=False, parser_clean=False, parser_suppr_reads=False, parser_beautiful_results=False, parser_threshold=False)
 
     #Identification parser
 
@@ -97,7 +97,7 @@ if __name__ == '__main__':
     help='Only the nbchoices maximum values of a row are considered. Warning, must be less or equal to the number of species.'
     )    
 
-    parser_identification.set_defaults(parser_identification=True,parser_matrix=False,parser_length=False,parser_merge_length=False, parser_clean=False, parser_suppr_reads=False, parser_beautiful_results=False, parser_threshold_determination=False)
+    parser_identification.set_defaults(parser_identification=True,parser_matrix=False,parser_length=False,parser_merge_length=False, parser_clean=False, parser_suppr_reads=False, parser_beautiful_results=False, parser_threshold=False)
 
     #Length parser
 
@@ -117,7 +117,7 @@ if __name__ == '__main__':
     )
 
 
-    parser_length.set_defaults(parser_identification=False,parser_matrix=False,parser_length=True,parser_merge_length=False, parser_clean=False, parser_suppr_reads=False, parser_beautiful_results=False, parser_threshold_determination=False)
+    parser_length.set_defaults(parser_identification=False,parser_matrix=False,parser_length=True,parser_merge_length=False, parser_clean=False, parser_suppr_reads=False, parser_beautiful_results=False, parser_threshold=False)
 
     #Merge length parser
 
@@ -145,7 +145,7 @@ if __name__ == '__main__':
     help='Out file containing one genome name and length per line.'
     )
     
-    parser_merge_length.set_defaults(parser_identification=False,parser_matrix=False,parser_length=False,parser_merge_length=True, parser_clean=False, parser_suppr_reads=False, parser_beautiful_results=False, parser_threshold_determination=False)
+    parser_merge_length.set_defaults(parser_identification=False,parser_matrix=False,parser_length=False,parser_merge_length=True, parser_clean=False, parser_suppr_reads=False, parser_beautiful_results=False, parser_threshold=False)
 
     #Clean bf and create the number x bf list
     
@@ -169,7 +169,7 @@ if __name__ == '__main__':
     help='Out file containing one id number and one genome name per line.'
     )
 
-    parser_clean.set_defaults(parser_matrix=False, parser_identification=False,parser_length=False,parser_merge_length=False, parser_clean=True, parser_suppr_reads=False, parser_beautiful_results=False, parser_threshold_determination=False)
+    parser_clean.set_defaults(parser_matrix=False, parser_identification=False,parser_length=False,parser_merge_length=False, parser_clean=True, parser_suppr_reads=False, parser_beautiful_results=False, parser_threshold=False)
 
     #Supression of poor quality reads
     
@@ -200,7 +200,7 @@ if __name__ == '__main__':
     )
 
 
-    parser_suppr_reads.set_defaults(parser_matrix=False, parser_identification=False,parser_length=False,parser_merge_length=False, parser_clean=False, parser_suppr_reads=True, parser_beautiful_results=False, parser_threshold_determination=False)
+    parser_suppr_reads.set_defaults(parser_matrix=False, parser_identification=False,parser_length=False,parser_merge_length=False, parser_clean=False, parser_suppr_reads=True, parser_beautiful_results=False, parser_threshold=False)
 
 
     #Get beautiful results
@@ -231,27 +231,27 @@ if __name__ == '__main__':
     help="create a pie chart of the results ?"
     )
 
-    parser_beautiful_results.set_defaults(parser_matrix=False, parser_identification=False,parser_length=False,parser_merge_length=False, parser_clean=False, parser_suppr_reads=False, parser_beautiful_results=True, parser_threshold_determination=False)
+    parser_beautiful_results.set_defaults(parser_matrix=False, parser_identification=False,parser_length=False,parser_merge_length=False, parser_clean=False, parser_suppr_reads=False, parser_beautiful_results=True, parser_threshold=False)
 
 
     # Create the figure for the threshold selection to merge close strains 
     
-    parser_threshold_determination = subparsers.add_parser('threshold_determination',help='Create the figure for the threshold selection to merge close strains.')
+    parser_threshold = subparsers.add_parser('threshold',help='Create the figure for the threshold selection to merge close strains.')
     
-    required_threshold_determination = parser_threshold_determination.add_argument_group('required arguments')
-    optional_threshold_determination = parser_threshold_determination.add_argument_group('optional arguments')
+    required_threshold = parser_threshold.add_argument_group('required arguments')
+    optional_threshold = parser_threshold.add_argument_group('optional arguments')
 
-    required_threshold_determination.add_argument("--matrix", "-m", metavar='HAMMING_MATRIX',
+    required_threshold.add_argument("--matrix", "-m", metavar='HAMMING_MATRIX',
     required=True,
     help="Hamming matrix file."
     )
     
-    optional_threshold_determination.add_argument('--threshold', '-t', dest='threshold', metavar='THRESHOLD', 
+    optional_threshold.add_argument('--threshold', '-t', dest='threshold', metavar='THRESHOLD', 
     default=0.0002, 
     help='Threshold. This threshold will be displayed on the histogram. Default: 0.0002'
     )
 
-    parser_threshold_determination.set_defaults(parser_matrix=False, parser_identification=False,parser_length=False,parser_merge_length=False, parser_clean=False, parser_suppr_reads=False, parser_beautiful_results=False, parser_threshold_determination=True)
+    parser_threshold.set_defaults(parser_matrix=False, parser_identification=False,parser_length=False,parser_merge_length=False, parser_clean=False, parser_suppr_reads=False, parser_beautiful_results=False, parser_threshold=True)
     
 
     #End parser#######
@@ -273,8 +273,8 @@ if __name__ == '__main__':
             python_scripts.suppr_bad_quality_reads.main(args)
         elif args.parser_beautiful_results:
             python_scripts.beautiful_results.main(args)
-        elif args.parser_threshold_determination:
-            python_scripts.threshold_determination.main(args)
+        elif args.parser_threshold:
+            python_scripts.threshold.main(args)
     else :
         parser.print_help()
 
