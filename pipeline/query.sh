@@ -1,6 +1,6 @@
 #!/bin/bash
-FASTQ="path/to/fastq"
-SEED="path/to/seedfile.txt"
+FASTQ="./JIM8232_1000_reads.fastq"
+SEED="./seed.txt"
 QUAL=9
 LENGTH=2000
 NB_READS=4000
