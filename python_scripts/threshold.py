@@ -30,7 +30,7 @@ def threshold_determination_help (matrix,threshold):
     
     plt.tight_layout()
     
-    plt.savefig('threshold_determination.png', format='png')    
+    plt.savefig('threshold.png', format='png')    
 
 def main(args):
     

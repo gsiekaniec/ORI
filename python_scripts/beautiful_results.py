@@ -8,15 +8,16 @@ def improve_results(file,number_name_list):
     
     #get the number for each strains
     numbername = {}
-    with open(number_name_list,'r') as f:
-        for line in f:
-            if line != '':
-                line = line.strip()
-                line = line.split('\t')
-                
-                number = line[0]
-                strain = line[1]
-                numbername[int(number)] = strain
+    if number_name_list != None:
+        with open(number_name_list,'r') as f:
+            for line in f:
+                if line != '':
+                    line = line.strip()
+                    line = line.split('\t')
+                    
+                    number = line[0]
+                    strain = line[1]
+                    numbername[int(number)] = strain
     
     with open(file,'r') as f:
         strains_list = []

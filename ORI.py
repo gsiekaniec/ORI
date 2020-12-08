@@ -216,7 +216,7 @@ if __name__ == '__main__':
     )
     
     required_beautiful_results.add_argument("--number_name_list", "-n", metavar='LIST_FILE',
-    required=True,
+    default=None,
     help='File containing one id number and one genome name per line.'
     )
     
