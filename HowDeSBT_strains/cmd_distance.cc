@@ -35,7 +35,9 @@ void DistanceCommand::usage(std::ostream &s,
     s << "                    is computed only considers this subset of each filter's bits" << endl;
     s << "                    (by default we use the first " << defaultEndPosition << " bits)" << endl;
     s << "  --bits=<N>        number of bits to use from each filter; same as 0..<N>" << endl;
+    s << "Merge options:" << endl;
     s << "  --threshold=<N>   threshold, floating point number ]0,1[" << endl;
+    s << "  --matrix=<F>      hamming matrix file" << endl;
     s << "  --merge           merge maximal cliques" << endl;
 }
 void DistanceCommand::parse(int _argc,
@@ -125,6 +127,12 @@ void DistanceCommand::parse(int _argc,
         if (is_prefix_of(arg, "--threshold="))
         {
             threshold = atof(argVal.c_str());
+            continue;
+        }
+
+        if (is_prefix_of(arg, "--matrix="))
+        {
+            path_matrix = argVal;
             continue;
         }
 
@@ -345,6 +353,7 @@ void DistanceCommand::dump_matrix()
 void DistanceCommand::load_matrix(string path)
 {
     ifstream bin_mat(path, ios::in | ios::binary);
+    if (!bin_mat.good()) fatal("Unable to open " + path);
     bin_mat.read((char*)&n, sizeof(size_t));
 
     matrix = new double*[n];
@@ -410,22 +419,21 @@ DistanceCommand::~DistanceCommand()
 
 int DistanceCommand::execute()
 {
-    if (!full_vec)
+    if (!mergeAll)
     {
         get_vectors();
         compute_hamming();
+        dump_matrix();
     }
-    else
+    else if (mergeAll && path_matrix.size())
     {
-        disk_hamming();
-    }
-    dump_matrix();
-    graph = new DistanceGraph(matrix, threshold, n);
-    graph->dump_graph(listFilename);
-    graph->dump_adj_matrix();
-    graph->compute_cliques();
-    if (mergeAll)
+        load_matrix(path_matrix);
+        graph = new DistanceGraph(matrix, threshold, n);
+        graph->dump_graph(listFilename);
+        graph->dump_adj_matrix();
+        graph->compute_cliques();
         merge();
+    }
     return 0;
 }
 

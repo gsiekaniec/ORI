@@ -5,6 +5,7 @@
 #include <vector>
 #include <set>
 #include <algorithm>
+#include <fstream>
 
 //----------
 //
@@ -125,4 +126,20 @@ bool contains
 	return (std::find(container.begin(),container.end(),std::string(element)) != container.end());
 	}
 
+inline unsigned long get_memory()
+{
+	std::string t;
+	std::ifstream in("/proc/meminfo", std::ios::in);
+	while (in >> t)
+	{
+		if (t == "MemTotal:")
+		{
+			unsigned long mem;
+			if (in >> mem) return mem;
+			else return 0;
+		}
+		in.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+	}
+	return 0;
+}
 #endif // utilities_H
