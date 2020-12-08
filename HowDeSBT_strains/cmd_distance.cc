@@ -230,14 +230,16 @@ void DistanceCommand::get_vectors()
         {
             bf->is_consistent_with(f, true);
         }
-        
+
+        if (endPosition==0)
+            endPosition = bf->numBits;
+
         string bvname = bv->filename;
         size_t offset = bv->offset;
         if (bf != f) delete bf;
 
         size_t start = offset + sdslbitvectorHeaderBytes + startPosition/8;
         string raw = bvname+":raw"+":"+to_string(start)+":"+to_string(endPosition-startPosition);
-        
         BitVector* rawBv = BitVector::bit_vector(raw);
         bf_vectors.emplace_back(rawBv);
     }
@@ -270,7 +272,7 @@ void DistanceCommand::compute_hamming()
 
     u64 dham;
     double rham;
-    for (u32 v=0; v<n-1; v++)
+    for (u32 v=0; v<n; v++) // n-1
     {
         for (u32 w=v+1; w<n; w++)
         {
@@ -376,6 +378,7 @@ void DistanceCommand::merge()
     string label;
     while (std::getline(in, label))
     {
+        paths.push_back(label);
         size_t last = label.find_last_of("/");
         if (string::npos != last)
             label.erase(0, last + 1);

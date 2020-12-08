@@ -35,7 +35,7 @@ private:
 class DistanceCommand : public Command
 {
 public:
-    static const std::uint64_t defaultEndPosition = 100 * 1000;
+    static const std::uint64_t defaultEndPosition = 0;
     static const int default_max_size_cl = 10;
     static constexpr double default_threshold = 0.5f;
 
