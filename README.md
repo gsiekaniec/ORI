@@ -86,6 +86,8 @@ This step (`ORI.py threshold_determination`) makes it possible to visualize the 
 | -m/--matrix | path to the hamming distance matrix. It's the output of the first *howdesbt distance* | Yes | 
 | -t/--threshold | threshold that we want to set to merge close genomes. Be careful not to set this threshold too high or too low. Floating number between 0 and 1. | No. Default: 0.0002 |
 	
+The default 0.0002 value is the value used to merge *Streptococcus thermophilus* strains using filters of size 0.5G. This value must be modified in the case of using another species and/or another filter size.
+	
 	howdesbt distance --list=leafname --threshold=0.0002 --matrix=hamming_matrix.bin --merge
 	
 | Parameters | Description |
