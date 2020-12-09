@@ -9,7 +9,7 @@ There are two sub-parts: (1) the creation of the index containing the bacterial 
 The index is based on the structure implemented in [HowDeSBT](https://github.com/medvedevgroup/HowDeSBT) [1] modified in order to use qgrams (word from spaced seeds) instead of kmers.
 
 As previously said, we replaced kmers by using spaced seeds which introduce don’t care positions in kmers that are not disturbed by errors. To select the best seed pattern for classification of long reads we used the [iedera](https://github.com/laurentnoe/iedera) software [2][3]. The best seed for our classification tools seems to be the following spaced seed of size 15 and weight 13: 111111001111111. This seed is then applied to words of size 15 resulting in qgrams used instead of kmers. 
-The seed can be found in the [seed](https://github.com/gsiekaniec/ORI/tree/master/seed) directory of ORI.
+The seed can be found in the [seed](https://github.com/gsiekaniec/ORI/tree/master/seed) directory of ORI. It is also possible to create a text file and add the spaced seed 111111001111111 (or another) in the first line.
 
 The preconstructed indexes for *Streptococcus thermophilus* strains are available in the ORI github in the directory: [preconstructed_indexes](https://github.com/gsiekaniec/ORI/tree/master/preconstructed_indexes) directory of ORI.
 
