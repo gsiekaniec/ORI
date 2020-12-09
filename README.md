@@ -35,11 +35,7 @@ The easiest way to install ORI is through [conda](https://github.com/gsiekaniec/
 
 ### I) First step: create your own index
 
-<img src="img/attention.png" alt="warning" width="30"/> Warning: reference genomes must be in .fasta or .fna and in the same directory.
-
-Help: if you have the fasta files distributed in several subfolders, it is possible to redirect them to a single directory by using:
-
-	find /repertory/containing/subfolders -name "*.fasta" -exec mv {} new/repertory/for/fasta/files \; # cp if you want to copy instead of moving.
+<img src="img/attention.png" alt="warning" width="30"/> Warning: reference genomes must be in **.fasta** or **.fna** and in the **same directory**.
 
  In repertory containing reference genomes (fasta format) do:
 
