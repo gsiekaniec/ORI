@@ -7,6 +7,7 @@ import matplotlib.pyplot as plt
 
 def threshold_determination_help (matrix,threshold):
     
+    threshold = float(threshold)
     distances = []
     with open (matrix,'r') as f:
         for line in f:
@@ -19,14 +20,14 @@ def threshold_determination_help (matrix,threshold):
     
     ax = plt.subplot()
     ax.hist(distances, bins = pas, density=True) 
- 
     
-    plt.axvline(x=threshold, color='r', linestyle='--',lw=0.5)
     plt.xlabel('Hamming distances')
     plt.ylabel('Density')
     plt.title('Hamming distance between pairs of strains.')
     
     plt.xlim(-0.0001,maximum)
+    
+    plt.axvline(x=threshold, color='r', linestyle='--',lw=0.5)
     
     plt.tight_layout()
     
