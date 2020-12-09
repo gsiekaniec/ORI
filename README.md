@@ -39,9 +39,9 @@ The easiest way to install ORI is through [conda](https://github.com/gsiekaniec/
 
 Help: if you have the fasta files distributed in several subfolders, it is possible to redirect them to a single directory by using:
 
-	find /repertory/containing/subfolders -name "*.fasta" -exec mv {} new/repertory/for/fasta/files \;
+	find /repertory/containing/subfolders -name "*.fasta" -exec mv {} new/repertory/for/fasta/files \; # cp if you want to copy instead of moving.
 
-In repertory containing reference genomes (fasta format) do:
+ In repertory containing reference genomes (fasta format) do:
 
 #### 1) Create the bloom filters (.bf) for each genome
 
