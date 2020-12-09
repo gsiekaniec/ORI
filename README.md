@@ -77,9 +77,9 @@ It is most of the time necessary to launch the command once, **without the --mer
 |----------|:-------------:|
 | --list | list of the bloom filters names (one per line). |
 	
-This step (`ORI.py threshold_determination`) makes it possible to visualize the distribution of the distances between the strains of the index. In this way it is possible to determine a threshold to merge the close strains. The output is the **threshold_determination.png** figure.
+This step (`ORI.py threshold_determination`) makes it possible to visualize the distribution of the distances between the strains of the index. In this way it is possible to determine a threshold to merge the close strains. The output is the **threshold_determination.png** figure in the current directory.
 	
-	ORI.py threshold_determination -m path/to/hamming_matrix.tsv -t 0.0002
+	ORI.py threshold_determination -m path/to/hamming_matrix.tsv
 	
 | Parameters | Description | Required |
 |----------|:-------------:|------:|
