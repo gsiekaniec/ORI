@@ -43,7 +43,7 @@ The easiest way to install ORI is through [conda](https://github.com/gsiekaniec/
 
 The seedfile.txt can be found in the [seed](https://github.com/gsiekaniec/ORI/tree/master/seed) directory of ORI.
 
-	howdesbt makebfQ --k=15 --qgram=path/to/seedfile.txt --bits=0.5G *.fasta
+	howdesbt makebfQ --k=15 --qgram=path/to/seedfile.txt --bits=0.25G *.fasta
 
 | Parameters | Description |
 |----------|:-------------:|
