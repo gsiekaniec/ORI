@@ -1,6 +1,6 @@
 ![linux](https://github.com/gsiekaniec/ORI/workflows/linux/badge.svg)
 ![macOS](https://github.com/gsiekaniec/ORI/workflows/macOS/badge.svg)
-# <img src="img/ORI.png" alt="warning" width="3000"/>
+# <img src="img/ORI.png" alt="ORI" width="3000"/>
 
 ORI (Oxford nanopore Reads Identification) is a software allowing, from long nanopore reads, to identify the bacterial strains present in a sample. 
 
