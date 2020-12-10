@@ -2,14 +2,13 @@
 ![macOS](https://github.com/gsiekaniec/ORI/workflows/macOS/badge.svg)
 # <img src="img/ORI.png" alt="ORI" width="3000"/>
 
-ORI (Oxford nanopore Reads Identification) is a software allowing, from long nanopore reads, to identify the bacterial strains present in a sample. 
+ORI (Oxford nanopore Reads Identification) is a software using long nanopore reads to identify bacteria present in a sample at the strain level. 
 
-There are two sub-parts: (1) the creation of the index containing the bacterial strains and (2) the query of this index with long reads in order to identify the strains. 
+There are two sub-parts in the ORI program: (1) the creation of the index containing the reference genomes of the interest species and (2) the query of this index with long reads from Nanopore sequencing in order to identify the strain(s). 
 
 The index is based on the structure implemented in [HowDeSBT](https://github.com/medvedevgroup/HowDeSBT) [1] modified in order to use qgrams (word from spaced seeds) instead of kmers.
 
-As previously said, we replaced kmers by using spaced seeds which introduce don’t care positions in kmers that are not disturbed by errors. To select the best seed pattern for classification of long reads we used the [iedera](https://github.com/laurentnoe/iedera) software [2][3]. The best seed for our classification tools seems to be the following spaced seed of size 15 and weight 13: 111111001111111. This seed is then applied to words of size 15 resulting in qgrams used instead of kmers. 
-The seed can be found in the [seed](https://github.com/gsiekaniec/ORI/tree/master/seed) directory of ORI. It is also possible to create a text file and add the spaced seed 111111001111111 (or another) in the first line.
+As previously said, we replaced kmers by qgrams. To get qgrams we use spaced seeds which introduce don’t care positions in kmers that won’t be disturbed by sequencing errors. To select the best seed pattern for classification of long reads we used the [iedera](https://github.com/laurentnoe/iedera) software [2][3]. The best seed for our classification tools seems to be the following: size 15 and weight 13, 111111001111111. This seed is then applied to words of size 15 resulting in qgrams used instead of kmers. 
 
 The preconstructed indexes for *Streptococcus thermophilus* strains are available in the ORI github in the directory: [preconstructed_indexes](https://github.com/gsiekaniec/ORI/tree/master/preconstructed_indexes) directory of ORI.
 
@@ -33,23 +32,35 @@ The easiest way to install ORI is through [conda](https://github.com/gsiekaniec/
 
 ## How does it work ?
 
+The seedfile.txt can be found in the [seed](https://github.com/gsiekaniec/ORI/tree/master/seed) directory of ORI.
+
+You can also create the seedfile.txt in your chosen repertory:
+	
+	cd path/to/repertory
+	touch seedfile.txt
+	echo "111111001111111" > seedfile.txt
+
 ### I) First step: create your own index
 
-<img src="img/attention.png" alt="warning" width="30"/> Warning: reference genomes must be in **.fasta** or **.fna** and in the **same directory**.
+<img src="img/attention.png" alt="warning" width="30"/> Caution: reference genomes must be in **.fasta** or **.fna** and in the **same directory**.
 
- In repertory containing reference genomes in fasta format (**it must be the current directory**) do:
+<img src="img/attention.png" alt="warning" width="30"/> Caution: all the reference genomes are to be placed in a same directory. 
+
+If you have the fasta files distributed in several subfolders, you have to redirect them to a single directory.
+
+Repertory containing fasta files (**must be the current directory**) to run the following scripts:
+
+	cd path/to/the/fasta/files/repertory
 
 #### 1) Create the bloom filters (.bf) for each genome
-
-The seedfile.txt can be found in the [seed](https://github.com/gsiekaniec/ORI/tree/master/seed) directory of ORI.
 
 	howdesbt makebfQ --k=15 --qgram=path/to/seedfile.txt --bits=0.25G *.fasta
 
 | Parameters | Description |
 |----------|:-------------:|
-| --k | length of the seed given in --qgram. |
+| --k | length of the seed given in --qgram. You may modify your seedfile.txt and this parameter. |
 | --qgram | file containing the used spaced seed. It's a text file containing the seed used on the first line (here 111111001111111). |
-| --bits | size of bloom filters. |
+| --bits | size of bloom filters. A size that is too small will give too many false positives to be usable and a size that is too large will take up too much space and greatly increase the computation times. |
 
 Then we get the names of the bf (bloom filter) files used to create the tree:
 
@@ -77,7 +88,7 @@ It is most of the time necessary to launch the command once, **without the --mer
 |----------|:-------------:|
 | --list | list of the bloom filters names (one per line). |
 	
-This step (`ORI.py threshold_determination`) makes it possible to visualize the distribution of the distances between the strains of the index. In this way it is possible to determine a threshold to merge the close strains. The output is the **threshold_determination.png** figure in the current directory.
+This step (`ORI.py threshold_determination`) makes it possible to visualize the distribution of the distances between the strains of the index. In this way it is possible to determine a threshold to merge the close strains. The output is the **threshold.png** figure in the current directory.
 	
 	ORI.py threshold -m path/to/hamming_matrix.tsv -t 0.0002
 	
