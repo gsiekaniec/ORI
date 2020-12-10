@@ -75,12 +75,10 @@ As the last quantification step requires the size of the genomes, it is preferab
 | -g/--genomes | path to the repertory containing genome (.fna or .fasta). | Yes |
 | -o/--outfile | output file containing length of each genome. | No. Default: length.txt |
 	
-Now that the bloom filters are created it is no longer necessary to keep the fastas files, **if it is not necessary to keep them**, they can be deleted to save space.
-In addition, if the fastas cannot be completely downloaded on the machine due to lack of space, it is possible to download them little by little and create the filters as you go by deleting the fasta files once in the form of a filter (.bf).
+Now that the bloom filters are created it is no longer necessary to keep the fastas files. **If it is not necessary to keep them**, they can be deleted to save space.
+In addition, if the fasta files cannot be completely downloaded on the machine due to lack of space, it is possible to download them little by little and create the filters as you go by deleting the fasta files once in the form of a filter (.bf).
 
-#### 1.5) If you want to cluster close strains (not mandatory): the threshold depending on the proximity of your strains
-
-It is most of the time necessary to launch the command once, **without the --merge option**, in order to see in the Hamming distance table which threshold would be the most interesting before relaunching to merging the strains. 
+#### 1.5) Option: if you want to cluster closely related strains to identify a fine cluster of strains rather than a mixed list of single strains:
 	
 	howdesbt distance --list=leafname
 
@@ -88,7 +86,8 @@ It is most of the time necessary to launch the command once, **without the --mer
 |----------|:-------------:|
 | --list | list of the bloom filters names (one per line). |
 	
-This step (`ORI.py threshold_determination`) makes it possible to visualize the distribution of the distances between the strains of the index. In this way it is possible to determine a threshold to merge the close strains. The output is the **threshold.png** figure in the current directory.
+
+<img src="img/attention.png" alt="warning" width="30"/> Caution: the threshold parameter t depends on the genetic proximity of your strains (based on Hamming distances matrix). To adapt this parameter to your bacterial species, just launch the following command once (`ORI.py threshold_determination`). It gives a figure **threshold.png** as output containing the distribution of the distances between the strains of the index. More generally, if your cluster of strains is too large and gives you to many possibilities of identification, try a lower t value (e.g. i know that the strains number 205, 51 and 55 are really closed on a phylogenic tree, but a bit farther away to strains 54 and 78; if a threshold of 0.0002 (default value) gives you a cluster containing the 5 strains, you can lower to -t 0.0001 to obtained two separated clusters). 
 	
 	ORI.py threshold -m path/to/hamming_matrix.tsv -t 0.0002
 	
@@ -98,6 +97,8 @@ This step (`ORI.py threshold_determination`) makes it possible to visualize the 
 | -t/--threshold | threshold that we want to set to merge close genomes. Be careful not to set this threshold too high or too low. Floating number between 0 and 1. | No. Default: 0.0002 |
 	
 The default 0.0002 value is the value used to merge *Streptococcus thermophilus* strains using filters of size 0.5G. This value must be modified in the case of using another species and/or another filter size.
+	
+Once you have defined your own t value, merge your strains in adapted clusters:
 	
 	howdesbt distance --list=leafname --threshold=0.0002 --matrix=hamming_matrix.bin --merge
 	
