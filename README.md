@@ -37,7 +37,7 @@ The easiest way to install ORI is through [conda](https://github.com/gsiekaniec/
 
 <img src="img/attention.png" alt="warning" width="30"/> Warning: reference genomes must be in **.fasta** or **.fna** and in the **same directory**.
 
- In repertory containing reference genomes (fasta format) do:
+ In repertory containing reference genomes in fasta format (**it must be the current directory**) do:
 
 #### 1) Create the bloom filters (.bf) for each genome
 
