@@ -52,6 +52,20 @@ Repertory containing fasta files (**must be the current directory**) to run the 
 
 #### 1) Create the bloom filters (.bf) for each genome
 
+
+As the last quantification step requires the size of the genomes, it is preferable to calculate it when we have our genomes:
+
+	ORI.py length -g path/to/the/genomes -o length.txt
+	
+| Parameters | Description | Required |
+|----------|:-------------:|------:|
+| -g/--genomes | path to the repertory containing genome (.fna or .fasta). | Yes |
+| -o/--outfile | output file containing length of each genome. | No. Default: length.txt |
+
+The `ORI.py length` step also allows to calculate an effective size for the bloom filters, this size is given in the **bf_size.txt** file.
+
+Then we create the bloom filters for all genomes:
+
 	howdesbt makebfQ --k=15 --qgram=path/to/seedfile.txt --bits=0.25G *.fasta
 
 | Parameters | Description |
@@ -63,15 +77,6 @@ Repertory containing fasta files (**must be the current directory**) to run the 
 Then we get the names of the bf (bloom filter) files used to create the tree:
 
 	ls *.bf > leafname
-
-As the last quantification step requires the size of the genomes, it is preferable to calculate it when we have our genomes:
-
-	ORI.py length -g path/to/the/genomes -o length.txt
-	
-| Parameters | Description | Required |
-|----------|:-------------:|------:|
-| -g/--genomes | path to the repertory containing genome (.fna or .fasta). | Yes |
-| -o/--outfile | output file containing length of each genome. | No. Default: length.txt |
 	
 Now that the bloom filters are created it is no longer necessary to keep the fastas files. **If it is not necessary to keep them**, they can be deleted to save space.
 In addition, if the fasta files cannot be completely downloaded on the machine due to lack of space, it is possible to download them little by little and create the filters as you go by deleting the fasta files once in the form of a filter (.bf).
