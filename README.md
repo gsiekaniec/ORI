@@ -44,8 +44,6 @@ You can also create the seedfile.txt in your chosen repertory:
 
 <img src="img/attention.png" alt="warning" width="30"/> Caution: reference genomes must be in **.fasta** or **.fna** and in the **same directory**.
 
-<img src="img/attention.png" alt="warning" width="30"/> Caution: all the reference genomes are to be placed in a same directory. 
-
 If you have the fasta files distributed in several subfolders, you have to redirect them to a single directory.
 
 Repertory containing fasta files (**must be the current directory**) to run the following scripts:
