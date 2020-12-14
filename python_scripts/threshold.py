@@ -4,7 +4,6 @@
 import matplotlib.pyplot as plt
 
 
-
 def threshold_determination_help (matrix,threshold):
     
     threshold = float(threshold)
@@ -13,21 +12,26 @@ def threshold_determination_help (matrix,threshold):
         for line in f:
             line = line.strip().split(' ')
             for number in line:
-                distances.append(float(number))
+                number=float(number)*10000.0
+                distances.append(round(number))
     
-    maximum = float(max(distances)+0.0005)
-    pas = int(maximum/0.00005)
+    #maximum = float(max(distances)+0.0005)*10000
+    maximum = int(max(distances)+1)
+    #pas = int(maximum/0.00001)
+    pas = maximum*2*2
     
     ax = plt.subplot()
-    ax.hist(distances, bins = pas, density=True) 
-    
-    plt.xlabel('Hamming distances')
+    ax.hist(distances, bins = pas, color='blue', density=True) 
+
+    #ax.legend((['1e-05']), loc='upper right');
+    plt.xlabel('Hamming distances (1e-05)')
     plt.ylabel('Density')
     plt.title('Hamming distance between pairs of strains.')
     
-    plt.xlim(-0.0001,maximum)
+    #plt.xlim(-0.0001,maximum)
+    plt.xlim(-1,maximum)
     
-    plt.axvline(x=threshold, color='r', linestyle='--',lw=0.5)
+    plt.axvline(x=threshold*10000, color='r', linestyle='--',lw=0.5)
     
     plt.tight_layout()
     
