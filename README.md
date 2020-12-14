@@ -61,9 +61,10 @@ As the last quantification step requires the size of the genomes, it is preferab
 |----------|:-------------:|------:|
 | -g/--genomes | path to the repertory containing genome (.fna or .fasta). | Yes |
 | -o/--outfile | output file containing length of each genome. | No. Default: length.txt |
-| -fpr/--false_positive_rate | False positive percent wanted for the bloom filter containing the biggest genomes. | No. Default: 0.01 |
+| -fpr/--false_positive_rate | false positive percent (between 0 and 1) wanted for the bloom filter containing the largest genomes. | No. Default: 0.01 |
+| -s/--seed_size | size of the spaced seed you want to use (not the weight). | No. Default: None |
 
-The `ORI.py length` step also allows to calculate an effective size for the bloom filters, this size is given in the **bf_min_size.txt** file.
+The `ORI.py length` step also allows to calculate an effective size for the bloom filters. Use the `-seed_size` and `-false_positive_rate` options . The bloom filter size is given in the **bf_min_size.txt** file.
 
 Then we create the bloom filters for all genomes:
 
