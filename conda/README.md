@@ -10,10 +10,10 @@ conda install -c gsiekaniec -c conda-forge ori
 
 ```bash
 git clone https://github.com/gsiekaniec/ORI
-conda env create -p ./ori-env 
+conda create -p ./ori-env 
 conda activate ./ori-env
 conda install conda-build -c conda-forge
-conda-build ./ORI/conda/ori
+conda-build ./ORI/conda/ori -c conda-forge
 ```
 
 ## Install
