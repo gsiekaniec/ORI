@@ -2,6 +2,7 @@
 # coding: utf-8
 
 import os
+import numpy as np
 from itertools import groupby
 
 def iter_fasta (file: str) -> str :
@@ -13,7 +14,8 @@ def iter_fasta (file: str) -> str :
         yield (seq)
     f.close()
 
-def get_length(genomes,out):
+def get_length(genomes,out,seed_size,false_positif_rate):
+    maximum_length = 0
     with open(out,'w') as o:
         for genome in os.listdir(genomes):
             length = 0
@@ -23,10 +25,19 @@ def get_length(genomes,out):
                     nb+=1
                     for seq in it:
                         length = length+len(seq)
+                if seed_size != None:
+                    if maximum_length < (int(length)-(int(seed_size)-1)):
+                        maximum_length = int(length)-(int(seed_size)-1)
                 o.write(f"{'.'.join(genome.split('.')[:-1])}\t{length}\t{nb}\n")
+    if seed_size != None:
+        with open('bf_min_size.txt' ,'w') as out:
+            print(f'Maximum genome lenght = {maximum_length} and false positif rate = {false_positif_rate}')
+            len_bf = int(round(-maximum_length/(np.log(1-false_positif_rate))))
+            out.write(f'{len_bf}')
+            print(f'{len_bf}')
 
 def main(args):
-    get_length(args.genomes,args.out)
+    get_length(args.genomes,args.out,args.seed_size,float(args.false_positif_rate))
     
 
 if __name__ == "__main__":

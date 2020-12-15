@@ -115,7 +115,17 @@ if __name__ == '__main__':
     default='length.txt', 
     help='Out file containing one genome name and length per line.'
     )
-
+    
+    optional_length.add_argument('--seed_size', '-s', dest='seed_size', 
+    default=None, 
+    help='Size of the spaced seed you want to use (not the weight).'
+    )
+    
+    optional_length.add_argument('--false_positif_rate', '-fpr', dest='false_positif_rate', 
+    default=0.01, 
+    help='Rate of false positif for the bloom filter containing the largest genome.'
+    )
+    
 
     parser_length.set_defaults(parser_identification=False,parser_matrix=False,parser_length=True,parser_merge_length=False, parser_clean=False, parser_suppr_reads=False, parser_beautiful_results=False, parser_threshold=False)
 
