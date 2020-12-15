@@ -20,5 +20,5 @@ conda-build ./ORI/conda/ori -c conda-forge
 
 ```bash
 ORI_PACKAGE_PATH=$(conda-build ./ORI/conda/ori --output)
-conda install ${ORI_PACKAGE_PATH} --update-deps
+conda install --update-deps ${ORI_PACKAGE_PATH}
 ```
