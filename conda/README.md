@@ -13,7 +13,7 @@ git clone https://github.com/gsiekaniec/ORI
 conda create -p ./ori-env 
 conda activate ./ori-env
 conda install conda-build -c conda-forge
-conda-build ./ORI/conda/ori -c conda-forge
+conda-build ./ORI/conda/ori -c conda-forge --update-deps
 ```
 
 ## Install
