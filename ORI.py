@@ -18,7 +18,7 @@ import python_scripts.suppr_bad_quality_reads
 import python_scripts.beautiful_results
 import python_scripts.threshold
 
-__version__ = '0.0.1'
+__version__ = '0.0.2'
 
 if __name__ == '__main__':
     
