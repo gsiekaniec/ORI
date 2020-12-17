@@ -62,7 +62,7 @@ As the last quantification step requires the size of the genomes, it is preferab
 	ORI.py length -g path/to/the/genomes -o length.txt
 
 
-<details><summary><strong>Parameters</strong></summary>
+<details><summary>Parameters</summary>
 
 | Parameters | Description | Required |
 |----------|:-------------:|------:|
@@ -79,7 +79,7 @@ Then we create the bloom filters for all genomes:
 
 	howdesbt makebfQ --k=15 --qgram=path/to/seedfile.txt --bits=0.25G *.fasta
 
-<details><summary><strong>Parameters</strong></summary>
+<details><summary>Parameters</summary>
 
 | Parameters | Description |
 |----------|:-------------:|
@@ -101,7 +101,7 @@ In addition, if the fasta files cannot be completely downloaded on the machine d
 	
 	howdesbt distance --list=leafname
 
-<details><summary><strong>Parameters</strong></summary>
+<details><summary>Parameters</summary>
 
 | Parameters | Description |
 |----------|:-------------:|
@@ -113,7 +113,7 @@ In addition, if the fasta files cannot be completely downloaded on the machine d
 	
 	ORI.py threshold -m hamming_matrix.tsv -t 0.0002
 	
-<details><summary><strong>Parameters</strong></summary>	
+<details><summary>Parameters</summary>	
 
 | Parameters | Description | Required |
 |----------|:-------------:|------:|
@@ -128,7 +128,7 @@ Once you have defined your own t value, merge your strains in adapted clusters:
 	
 	howdesbt distance --list=leafname --threshold=0.0002 --matrix=hamming_matrix.bin --merge
 	
-<details><summary><strong>Parameters</strong></summary>
+<details><summary>Parameters</summary>
 
 | Parameters | Description |
 |----------|:-------------:|
@@ -141,7 +141,7 @@ Once you have defined your own t value, merge your strains in adapted clusters:
 
 	ORI.py clean_merge -n leafname -r path/to/repository/with/bf/files -o list_number_file.txt
 	
-<details><summary><strong>Parameters</strong></summary>
+<details><summary>Parameters</summary>
 	
 | Parameters | Description | Required |
 |----------|:-------------:|------:|
@@ -157,7 +157,7 @@ Since the genomes of some strains have been merged, the size of these clusters m
 
     ORI.py merge_length -b leafname_merge -l length.txt -c list_number_file.txt -o merge_length.txt
 
-<details><summary><strong>Parameters</strong></summary>
+<details><summary>Parameters</summary>
 
 | Parameters | Description | Required |
 |----------|:-------------:|------:|
@@ -174,7 +174,7 @@ To run these commands you must be in the directory containing the .bf files.
     
     howdesbt cluster --list=leafname/or/leafname_merge --tree=union.sbt --nodename=node{number} --cull
     
-<details><summary><strong>Parameters</strong></summary>
+<details><summary>Parameters</summary>
     
 | Parameters | Description | 
 |----------|:-------------:|
@@ -187,7 +187,7 @@ To run these commands you must be in the directory containing the .bf files.
     
     howdesbt build --howde --tree=union.sbt --outtree=howde.sbt
 
-<details><summary><strong>Parameters</strong></summary>
+<details><summary>Parameters</summary>
 
 | Parameters | Description |
 |----------|:-------------:|
@@ -209,7 +209,7 @@ In order to facilitate identification it may be wise to remove reads of too poor
 
 	ORI.py suppr_bad_reads -fq fastq -q min_quality_value -l min_length_value
 
-<details><summary><strong>Parameters</strong></summary>
+<details><summary>Parameters</summary>
 
 | Parameters | Description | Required |
 |----------|:-------------:|------:|
@@ -230,7 +230,7 @@ Then we can start the identification:
 
 	howdesbt queryQ --sort --qgram=path/to/seedfile.txt --tree=path/to/howde.sbt --threshold=0.5  fastq_file_4000_reads > path/to/results_howde.txt
 
-<details><summary><strong>Parameters</strong></summary>
+<details><summary>Parameters</summary>
 
 | Parameters | Description | 
 |----------|:-------------:|
@@ -243,7 +243,7 @@ Then we can start the identification:
 
 	ORI.py matrix -f path/to/results/from/HowDeSBT -l path/to/leafname/or/leafname_merge -o path/to/results/matrix.tsv
 
-<details><summary><strong>Parameters</strong></summary>
+<details><summary>Parameters</summary>
 
 | Parameters | Description | Required |
 |----------|:-------------:|------:|
@@ -257,7 +257,7 @@ Then we can start the identification:
 
 	ORI.py identification -m path/to/matrix.tsv -f path/to/results/from/HowDeSBT -le path/to/length.txt/or/merge_length.txt -l path/to/leafname/or/leafname_merge -c path/to/clingo/or/$(which clingo)(with the conda installation)
 
-<details><summary><strong>Parameters</strong></summary>
+<details><summary>Parameters</summary>
 
 | Parameters | Description | Required |
 |----------|:-------------:|------:|
@@ -280,7 +280,7 @@ The results are not very readable (especially in case of merge of close strains)
 
 	ORI.py beautiful_results -f path/to/results/from/ORI -n path/to/lnf.txt/or/list_number_file.txt --pie_chart	
 
-<details><summary><strong>Parameters</strong></summary>
+<details><summary>Parameters</summary>
 
 | Parameters | Description | Required |
 |----------|:-------------:|------:|
