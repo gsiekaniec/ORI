@@ -24,7 +24,7 @@ The preconstructed indexes for *Streptococcus thermophilus* strains are availabl
 
 The easiest way to install ORI is through [conda](https://github.com/gsiekaniec/ORI/tree/master/conda).
 
-<details><summary><strong>Conda</strong></summary>
+<details><summary><strong>From Conda</strong></summary>
 
 	conda create -p ori_env
 	conda activate ori_env
@@ -60,7 +60,10 @@ Repertory containing fasta files (**must be the current directory**) to run the 
 As the last quantification step requires the size of the genomes, it is preferable to calculate it when we have our genomes:
 
 	ORI.py length -g path/to/the/genomes -o length.txt
-	
+
+
+<details><summary><strong>Parameters</strong></summary>
+
 | Parameters | Description | Required |
 |----------|:-------------:|------:|
 | -g/--genomes | path to the repertory containing genome (.fna or .fasta). | Yes |
@@ -68,17 +71,24 @@ As the last quantification step requires the size of the genomes, it is preferab
 | -fpr/--false_positive_rate | false positive percent (between 0 and 1) wanted for the bloom filter containing the largest genomes. | No. Default: 0.01 |
 | -s/--seed_size | size of the spaced seed you want to use (not the weight). | No. Default: None |
 
+</details>
+
 The `ORI.py length` step also allows to calculate an effective size for the bloom filters. Use the `-seed_size` and `-false_positive_rate` options . The bloom filter size is given in the **bf_min_size.txt** file.
 
 Then we create the bloom filters for all genomes:
 
 	howdesbt makebfQ --k=15 --qgram=path/to/seedfile.txt --bits=0.25G *.fasta
 
+<details><summary><strong>Parameters</strong></summary>
+
 | Parameters | Description |
 |----------|:-------------:|
 | --k | length of the seed given in --qgram. You may modify your seedfile.txt and this parameter. |
 | --qgram | file containing the used spaced seed. It's a text file containing the seed used on the first line (here 111111001111111). |
 | --bits | size of bloom filters. A size that is too small will give too many false positives to be usable and a size that is too large will take up too much space and greatly increase the computation times. |
+
+
+</details>
 
 Then we get the names of the bf (bloom filter) files used to create the tree:
 
@@ -91,19 +101,26 @@ In addition, if the fasta files cannot be completely downloaded on the machine d
 	
 	howdesbt distance --list=leafname
 
+<details><summary><strong>Parameters</strong></summary>
+
 | Parameters | Description |
 |----------|:-------------:|
 | --list | list of the bloom filters names (one per line). |
 	
+</details>
 
 :warning: Caution: the threshold parameter t depends on the genetic proximity of your strains (based on Hamming distances matrix). To adapt this parameter to your bacterial species, just launch the following command once (`ORI.py threshold`). It gives a figure **threshold.png** as output containing the distribution of the distances between the strains of the index (distances are multiplied by 1e05 in the figure). More generally, if your cluster of strains is too large and gives you to many possibilities of identification, try a lower t value (e.g. i know that the strains number 205, 51 and 55 are really closed on a phylogenic tree, but a bit farther away to strains 54 and 78; if a threshold of 0.0002 (default value) gives you a cluster containing the 5 strains, you can lower to -t 0.0001 to obtained two separated clusters). 
 	
 	ORI.py threshold -m hamming_matrix.tsv -t 0.0002
 	
+<details><summary><strong>Parameters</strong></summary>	
+
 | Parameters | Description | Required |
 |----------|:-------------:|------:|
 | -m/--matrix | path to the hamming distance matrix. It's the output of the first *howdesbt distance* | Yes | 
 | -t/--threshold | threshold that we want to set to merge close genomes. Be careful not to set this threshold too high or too low. Floating number between 0 and 1. | No. Default: 0.0002 |
+	
+</details>
 	
 The default 0.0002 value is the value used to merge *Streptococcus thermophilus* strains using filters of size 0.5G. This value must be modified in the case of using another species and/or another filter size.
 	
@@ -111,6 +128,8 @@ Once you have defined your own t value, merge your strains in adapted clusters:
 	
 	howdesbt distance --list=leafname --threshold=0.0002 --matrix=hamming_matrix.bin --merge
 	
+<details><summary><strong>Parameters</strong></summary>
+
 | Parameters | Description |
 |----------|:-------------:|
 | --list | list of the bloom filters names (one per line). |
@@ -118,7 +137,11 @@ Once you have defined your own t value, merge your strains in adapted clusters:
 | --threshold | hamming distance threshold between bloom filter for merging them. Floating number between 0 and 1. |
 | --merge | merge maximal cliques ? |
 
+</details>
+
 	ORI.py clean_merge -n leafname -r path/to/repository/with/bf/files -o list_number_file.txt
+	
+<details><summary><strong>Parameters</strong></summary>
 	
 | Parameters | Description | Required |
 |----------|:-------------:|------:|
@@ -126,11 +149,15 @@ Once you have defined your own t value, merge your strains in adapted clusters:
 | -r/--repository | repertory containing the bloom filter file (.bf). | Yes |
 | -o/--outfile | output file. Out file containing one id number, one genome name and the corresponding number of sequence per line. | Yes |
 
+</details>
+
 	ls *.bf > leafname_merge
 
 Since the genomes of some strains have been merged, the size of these clusters must also be recalculated:
 
     ORI.py merge_length -b leafname_merge -l length.txt -c list_number_file.txt -o merge_length.txt
+
+<details><summary><strong>Parameters</strong></summary>
 
 | Parameters | Description | Required |
 |----------|:-------------:|------:|
@@ -139,11 +166,15 @@ Since the genomes of some strains have been merged, the size of these clusters m
 | -c/--correspondance | file containing correspondance between numbers and genomes. It's the output of *ORI.py clean_merge* (list_number_file.txt). | Yes |
 | -o/--outfile | output file containing length of each genome or genomes cluster. | No. Default: length_merge.txt |
 
+</details>
+
 #### 2) Create the tree
 
 To run these commands you must be in the directory containing the .bf files.
     
     howdesbt cluster --list=leafname/or/leafname_merge --tree=union.sbt --nodename=node{number} --cull
+    
+<details><summary><strong>Parameters</strong></summary>
     
 | Parameters | Description | 
 |----------|:-------------:|
@@ -152,13 +183,19 @@ To run these commands you must be in the directory containing the .bf files.
 | --nodename | filename template for internal tree nodes this must contain the substring {number}. |
 | --cull | remove nodes from the binary tree; remove those for which saturation of determined is more than 2 standard deviations. |
     
+</details>
+    
     howdesbt build --howde --tree=union.sbt --outtree=howde.sbt
+
+<details><summary><strong>Parameters</strong></summary>
 
 | Parameters | Description |
 |----------|:-------------:|
 | --howde | create tree nodes as determined/how, but only store active bits. Create the nodes as rrr-compressed bit vector(s). |
 | --tree | name for tree toplogy file. |
 | --outtree | name of topology file to write tree consisting of the filters built. |
+  
+</details>
   
 Once the compressed bloom filters have been created, we can delete those that are not compressed:
 
@@ -172,12 +209,16 @@ In order to facilitate identification it may be wise to remove reads of too poor
 
 	ORI.py suppr_bad_reads -fq fastq -q min_quality_value -l min_length_value
 
+<details><summary><strong>Parameters</strong></summary>
+
 | Parameters | Description | Required |
 |----------|:-------------:|------:|
 | -fq/--fastq | fastq file. | Yes |
 | -q/--qualityMin | Minimum quality (Phred score) threshold to save a read. | No. Default: 9 |
 | -l/--lengthMin | minimum length threshold to save a read. | No. Default: 2000 |
 | --gzip | use of compressed fastq: fastq.gz. | No |
+
+</details>
 
 #### 1) Query part and construction of the {strains x reads} matrix 
 
@@ -189,6 +230,8 @@ Then we can start the identification:
 
 	howdesbt queryQ --sort --qgram=path/to/seedfile.txt --tree=path/to/howde.sbt --threshold=0.5  fastq_file_4000_reads > path/to/results_howde.txt
 
+<details><summary><strong>Parameters</strong></summary>
+
 | Parameters | Description | 
 |----------|:-------------:|
 | --sort | sort matched leaves by the number of query qgrams present, and report the number of qgrams present. |
@@ -196,7 +239,11 @@ Then we can start the identification:
 | --tree | name of the tree toplogy file (howde.sbt). |
 | --threshold | fraction of query qgrams that must be present in a leaf to be considered as a match; this must be between 0 and 1. |
 
+</details>
+
 	ORI.py matrix -f path/to/results/from/HowDeSBT -l path/to/leafname/or/leafname_merge -o path/to/results/matrix.tsv
+
+<details><summary><strong>Parameters</strong></summary>
 
 | Parameters | Description | Required |
 |----------|:-------------:|------:|
@@ -204,9 +251,13 @@ Then we can start the identification:
 | -l/--list_name |  list of the bloom filters names (one per line) in the same order than in the matrix. | Yes |
 | -out/--output | output {strains x reads} matrice file.. | No. Default: matrice.tsv |
 
+</details>
+
 #### 2) Identification/Quantification
 
 	ORI.py identification -m path/to/matrix.tsv -f path/to/results/from/HowDeSBT -le path/to/length.txt/or/merge_length.txt -l path/to/leafname/or/leafname_merge -c path/to/clingo/or/$(which clingo)(with the conda installation)
+
+<details><summary><strong>Parameters</strong></summary>
 
 | Parameters | Description | Required |
 |----------|:-------------:|------:|
@@ -219,6 +270,8 @@ Then we can start the identification:
 | -t/--threshold | Minimum percent value in the matrix for association between reads and species (between 0 and 100). | No. Default: 50 |
 | -n/--nbchoices | Only the nbchoices maximum values of a row are considered. Warning, must be less or equal to the number of species. | No. Default: 12 |
 
+</details>
+
 If the genomes of close strains were not merged during the creation of the index:
 
 	num=0; for i in `cat path/to/leafname`;do echo -e "${num} \t ${i}" >> lnf.txt; let num++; done
@@ -227,6 +280,8 @@ The results are not very readable (especially in case of merge of close strains)
 
 	ORI.py beautiful_results -f path/to/results/from/ORI -n path/to/lnf.txt/or/list_number_file.txt --pie_chart	
 
+<details><summary><strong>Parameters</strong></summary>
+
 | Parameters | Description | Required |
 |----------|:-------------:|------:|
 | -f/--file | results file from ORI. | Yes |
@@ -234,4 +289,4 @@ The results are not very readable (especially in case of merge of close strains)
 | -o/--output | output file. | No. Default: clean_results.txt |
 | --pie_chart | create a pie chart of the results in png format. | No |
 
-
+</details>
