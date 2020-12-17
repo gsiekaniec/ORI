@@ -262,7 +262,7 @@ def main(args):
     
     #If no answer then stop the execution and ask for more reads
     if i == 0:
-        print('Not enought reads to get an answer !')
+        print('No answer ! Maybe not enough reads or the stub (s) from the reads is not in the index.')
         exit(1)
     
     soluce = set()
