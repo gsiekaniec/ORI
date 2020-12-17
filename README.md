@@ -215,9 +215,13 @@ Then we can start the identification:
 | -t/--threshold | Minimum percent value in the matrix for association between reads and species (between 0 and 100). | No. Default: 50 |
 | -n/--nbchoices | Only the nbchoices maximum values of a row are considered. Warning, must be less or equal to the number of species. | No. Default: 12 |
 
+If the genomes of close strains were not merged during the creation of the index:
+
+	num=0; for i in `cat path/to/leafname`;do echo -e "${num} \t ${i}" >> lnf.txt; let num++; done
+
 The results are not very readable (especially in case of merge of close strains), it is possible to have cleaner results:
 
-	ORI.py beautiful_results -f path/to/results/from/ORI -n path/to/list_number_file.txt --pie_chart	
+	ORI.py beautiful_results -f path/to/results/from/ORI -n path/to/lnf.txt/or/list_number_file.txt --pie_chart	
 
 | Parameters | Description | Required |
 |----------|:-------------:|------:|
