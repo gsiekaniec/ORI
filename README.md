@@ -42,7 +42,7 @@ You can also create the seedfile.txt in your chosen repertory:
 
 ### I) First step: create your own index
 
-<img src="img/attention.png" alt="warning" width="30"/> Caution: reference genomes must be in **.fasta** or **.fna** and in the **same directory**.
+:warning: Caution: reference genomes must be in **.fasta** or **.fna** and in the **same directory**.
 
 If you have the fasta files distributed in several subfolders, you have to redirect them to a single directory.
 
@@ -92,7 +92,7 @@ In addition, if the fasta files cannot be completely downloaded on the machine d
 | --list | list of the bloom filters names (one per line). |
 	
 
-<img src="img/attention.png" alt="warning" width="30"/> Caution: the threshold parameter t depends on the genetic proximity of your strains (based on Hamming distances matrix). To adapt this parameter to your bacterial species, just launch the following command once (`ORI.py threshold`). It gives a figure **threshold.png** as output containing the distribution of the distances between the strains of the index (distances are multiplied by 1e05 in the figure). More generally, if your cluster of strains is too large and gives you to many possibilities of identification, try a lower t value (e.g. i know that the strains number 205, 51 and 55 are really closed on a phylogenic tree, but a bit farther away to strains 54 and 78; if a threshold of 0.0002 (default value) gives you a cluster containing the 5 strains, you can lower to -t 0.0001 to obtained two separated clusters). 
+:warning: Caution: the threshold parameter t depends on the genetic proximity of your strains (based on Hamming distances matrix). To adapt this parameter to your bacterial species, just launch the following command once (`ORI.py threshold`). It gives a figure **threshold.png** as output containing the distribution of the distances between the strains of the index (distances are multiplied by 1e05 in the figure). More generally, if your cluster of strains is too large and gives you to many possibilities of identification, try a lower t value (e.g. i know that the strains number 205, 51 and 55 are really closed on a phylogenic tree, but a bit farther away to strains 54 and 78; if a threshold of 0.0002 (default value) gives you a cluster containing the 5 strains, you can lower to -t 0.0001 to obtained two separated clusters). 
 	
 	ORI.py threshold -m hamming_matrix.tsv -t 0.0002
 	
