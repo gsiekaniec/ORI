@@ -97,7 +97,7 @@ Then we get the names of the bf (bloom filter) files used to create the tree:
 Now that the bloom filters are created it is no longer necessary to keep the fastas files. **If it is not necessary to keep them**, they can be deleted to save space.
 In addition, if the fasta files cannot be completely downloaded on the machine due to lack of space, it is possible to download them little by little and create the filters as you go by deleting the fasta files once in the form of a filter (.bf).
 
-#### 1.5) Option: if you want to cluster closely related strains to identify a fine cluster of strains rather than a mixed list of single strains:
+#### 2) If you want to cluster closely related strains to identify a fine cluster of strains rather than a mixed list of single strains:
 	
 	howdesbt distance --list=leafname
 
@@ -168,7 +168,7 @@ Since the genomes of some strains have been merged, the size of these clusters m
 
 </details>
 
-#### 2) Create the tree
+#### 3) Create the tree
 
 To run these commands you must be in the directory containing the .bf files.
     
