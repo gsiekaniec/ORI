@@ -36,3 +36,7 @@ if (CMAKE_BUILD_TYPE STREQUAL "Release" AND MAKE_RELEASE EQUAL 1)
     include (CPack)
 endif()
 
+enable_testing()
+add_subdirectory(tests)
+
+

@@ -16,9 +16,10 @@ def bad_files_suppression_list (repository : str, names : list) -> list:
         if element.endswith('.bf'):
             element = element.strip()
             if element not in names:
-                for number in element.split('_')[:-1]:
-                    number = int(number)
-                    to_suppr.append(names[number])
+                if (''.join(element.split('_')[:-1])).isnumeric():
+                    for number in element.split('_')[:-1]:
+                        number = int(number)
+                        to_suppr.append(names[number])
     return to_suppr
     
 def main(args):
@@ -36,6 +37,7 @@ def main(args):
     for bf_file in to_suppr:
         if bf_file in names:
             if os.path.exists(args.repository+'/'+bf_file):
+                print(f'Suppresion of {args.repository}/{bf_file}')
                 os.remove(args.repository+'/'+bf_file) 
             
 
