@@ -24,11 +24,6 @@ jobs:
         working-directory: ${{runner.workspace}}/build
         run: cmake --build . --config $BUILD_TYPE -j2
 
-      - name: Test
-        shell: bash
-        working-directory: ${{runner.workspace}}/build
-        run: ctest -C $BUILD_TYPE
-
       - name: Package
         shell: bash
         working-directory: ${{runner.workspace}}/build
@@ -38,7 +33,12 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: '3.7'
-        
+      
+      - name: Test
+        shell: bash
+        working-directory: ${{runner.workspace}}/build
+        run: ctest -C $BUILD_TYPE
+  
       - name: Auto release
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
