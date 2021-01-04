@@ -24,6 +24,12 @@ jobs:
         working-directory: ${{runner.workspace}}/build
         run: cmake --build . --config $BUILD_TYPE -j2
 
+      - name: Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install PyGithub
+          pip install numpy clingo clyngor networkx pygraphviz matplotlib
+
       - name: Test
         shell: bash
         working-directory: ${{runner.workspace}}/build
@@ -46,6 +52,4 @@ jobs:
           echo $GH_TOKEN
           ls $GITHUB_WORKSPACE
           pwd
-          python -m pip install --upgrade pip
-          pip install PyGithub
           python3 $GITHUB_WORKSPACE/python_scripts/auto_release.py ${{runner.workspace}}/build
