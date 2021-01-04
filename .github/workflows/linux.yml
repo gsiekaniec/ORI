@@ -26,6 +26,7 @@ jobs:
 
       - name: Dependencies
         run: |
+          sudo apt-get install -y graphviz-dev
           python -m pip install --upgrade pip
           pip install PyGithub
           pip install numpy clyngor networkx pygraphviz matplotlib
