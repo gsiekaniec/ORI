@@ -16,6 +16,8 @@ def iter_fasta (file: str) -> str :
 
 def get_length(genomes,out,seed_size,false_positif_rate):
     maximum_length = 0
+    genomes_length = {}
+    genomes_order = []
     with open(out,'w') as o:
         for genome in os.listdir(genomes):
             length = 0
@@ -28,7 +30,10 @@ def get_length(genomes,out,seed_size,false_positif_rate):
                 if seed_size != None:
                     if maximum_length < (int(length)-(int(seed_size)-1)):
                         maximum_length = int(length)-(int(seed_size)-1)
-                o.write(f"{'.'.join(genome.split('.')[:-1])}\t{length}\t{nb}\n")
+                genomes_order.append('.'.join(genome.split('.')[:-1])) 
+                genomes_length['.'.join(genome.split('.')[:-1])] = (length,nb)
+        for g in sorted(genomes_order):
+            o.write(f"{g}\t{genomes_length[g][0]}\t{genomes_length[g][1]}\n")
     if seed_size != None:
         with open('bf_min_size.txt' ,'w') as out:
             print(f'Maximum genome lenght = {maximum_length} and false positif rate = {false_positif_rate}')
