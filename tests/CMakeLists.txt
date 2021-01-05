@@ -14,11 +14,6 @@ add_test(
 )
 
 add_test(
-	NAME test_threshold
-	COMMAND sh -c "cd ${PROJECT_SOURCE_DIR}/tests/index_creation/; ./test_threshold.sh"
-)
-
-add_test(
 	NAME test_merge
 	COMMAND sh -c "cd ${PROJECT_SOURCE_DIR}/tests/index_creation/; ./test_merge.sh"
 )
