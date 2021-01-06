@@ -31,6 +31,7 @@ jobs:
 
       - name: Dependencies
         run: |
+          brew install graphviz
           python -m pip install --upgrade pip
           pip install PyGithub
           pip install numpy clyngor networkx pygraphviz matplotlib
