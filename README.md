@@ -197,7 +197,7 @@ To run these commands you must be in the directory containing the .bf files.
   
 </details>
   
-Once the compressed bloom filters have been created, we can delete those that are not compressed:
+Once the compressed bloom filters have been created, we can delete those that are not compressed (:warning: be careful, this step deletes files):
 
     ls | grep -Pv 'detbrief.rrr.' | grep '.bf' | xargs rm --
 
