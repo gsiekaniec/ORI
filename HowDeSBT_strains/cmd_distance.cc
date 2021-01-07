@@ -5,6 +5,10 @@
 #include "bit_utilities.h"
 #include <string>
 
+#if __APPLE__
+#include <mach-o/dyld.h>
+#endif
+
 #define u32 std::uint32_t
 #define u64 std::uint64_t
 
@@ -498,7 +502,12 @@ void DistanceGraph::dump_adj_matrix()
 void DistanceGraph::compute_cliques()
 {
     char buffer[1024];
+#if __APPLE__
+    uint32_t size = 1024;
+    _NSGetExecutablePath(buffer, &size);
+#else
     readlink("/proc/self/exe", buffer, 1024);
+#endif
     string dir_bin = dirname(buffer);
     string cmd = "python3 " + dir_bin + "/max_cliques.py adj_matrix.txt max_cliques.txt > /dev/null";
     system(cmd.c_str());
