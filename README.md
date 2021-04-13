@@ -73,7 +73,7 @@ As the last quantification step requires the size of the genomes, it is preferab
 
 </details>
 
-The `ORI.py length` step also allows to calculate an effective size for the bloom filters. Use the `-seed_size` and `-false_positive_rate` options . The bloom filter size is given in the **bf_min_size.txt** file.
+The `ORI.py length` step also allows to calculate an effective size for the bloom filters. Use the `-seed_size` and `-false_positive_rate` options . The bloom filter size is given in the **bf_min_size.txt** file. If you ever have large genomes it makes more sense to use [ntCards](https://github.com/bcgsc/ntCard). In fact the `ORI.py length` script gives the effective size of the bloom filters for all the kmers of the largest genome. However, the calculation should be carried out with the number of distinct kmers (longer to calculate).
 
 Then we create the bloom filters for all genomes:
 
@@ -197,7 +197,7 @@ To run these commands you must be in the directory containing the .bf files.
   
 </details>
   
-Once the compressed bloom filters have been created, we can delete those that are not compressed:
+Once the compressed bloom filters have been created, we can delete those that are not compressed (:warning: be careful, this step deletes files):
 
     ls | grep -Pv 'detbrief.rrr.' | grep '.bf' | xargs rm --
 
