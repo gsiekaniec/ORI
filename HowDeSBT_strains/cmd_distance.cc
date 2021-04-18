@@ -280,13 +280,62 @@ void DistanceCommand::compute_hamming()
     {
         for (u32 w=v+1; w<n; w++)
         {
+#if defined(__SSE2__) && defined(USE_SSE)
+            dham = sse_hamming((u8*)bv_vectors[v], (u8*)bv_vectors[w], nbits*8);
+#else
             dham = hamming_distance(bv_vectors[v], bv_vectors[w], nbits);
+#endif
             rham = 1.0*dham/nbits;
             matrix[v][w] = rham;
             matrix[w][v] = rham;
         }
     }
 }
+
+void DistanceCommand::compute_hamming2()
+{
+    std::ifstream in(listFilename);
+    if (!in)
+        fatal("Unable to open " + listFilename);
+
+    n = bf_vectors.size();
+    u64 nbits = endPosition - startPosition;
+    u64 first = startPosition / 8;
+    u64 end = endPosition / 8;
+    u64 nbytes = (nbits + 7) / 8;
+
+    uint8_t* data[n];
+    matrix = new double*[n]();
+    for (int i=0; i<n; i++)
+    {
+        matrix[i] = new double[n]();
+        data[i] = new uint8_t[nbytes]();
+        bf_vectors[i]->load();
+        memcpy(data[i], reinterpret_cast<u8*>(bf_vectors[i]->bits->data())+first, nbytes);
+        delete bf_vectors[i];
+    }
+
+    u64 dham;
+    double rham;
+    for (u32 v=0; v<n; v++)
+    {
+        for (u32 w=v+1; w<n; w++)
+        {
+#if defined(__SSE2__) && defined(USE_SSE)
+            dham = sse_hamming(data[v], data[w], nbits*8);
+#else
+            dham = hamming_distance(data[v], data[w], nbits);
+#endif
+            rham = 1.0*dham/nbits;
+            matrix[v][w] = rham;
+            matrix[w][v] = rham;
+        }
+    }
+
+    for (int i=0; i<n; i++)
+        delete[] data[i];
+}
+
 void DistanceCommand::disk_hamming()
 {
     std::ifstream in(listFilename);
@@ -324,8 +373,11 @@ void DistanceCommand::disk_hamming()
         {
             dvec[w]->load();
             u64* second = dvec[w]->bvs[0]->bits->data();
+#if defined(__SSE2__) && defined(USE_SSE)
+            dham = sse_hamming((u8*)first, (u8*)second, nbits*8);
+#else
             dham = hamming_distance(first, second, nbits);
-            //cout << 
+#endif
             rham = 1.0*dham/nbits;
             matrix[v][w] = rham;
             matrix[w][v] = rham;
@@ -429,7 +481,10 @@ int DistanceCommand::execute()
     if (!mergeAll)
     {
         get_vectors();
-        compute_hamming();
+        if (full_vec)
+            compute_hamming();
+        else
+            compute_hamming2();
         dump_matrix();
     }
     else if (mergeAll && path_matrix.size())

@@ -78,6 +78,10 @@ set(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
 set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR})
 
+if (USE_SEE)
+    add_definitions(-DUSE_SSE)
+endif()
+
 if (STRAIN_ONLY)
     link_directories(${CROAR_LINK} ${SDSL_LINK} ${ZLIB_LINK})
     link_libraries(roaring sdsl pthread z)
