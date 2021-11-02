@@ -5,10 +5,6 @@
 #include "bit_utilities.h"
 #include <string>
 
-#if __APPLE__
-#include <mach-o/dyld.h>
-#endif
-
 #define u32 std::uint32_t
 #define u64 std::uint64_t
 
@@ -42,7 +38,8 @@ void DistanceCommand::usage(std::ostream &s,
     s << "Merge options:" << endl;
     s << "  --threshold=<N>   threshold, floating point number ]0,1[" << endl;
     s << "  --matrix=<F>      hamming matrix file" << endl;
-    s << "  --merge           merge maximal cliques" << endl;
+    s << "  --merge           merge connected components" << endl;
+    s << "  --merge=<F>       merge maximal cliques if clco is >= <F>" << endl;
 }
 void DistanceCommand::parse(int _argc,
                             char **_argv)
@@ -151,6 +148,13 @@ void DistanceCommand::parse(int _argc,
             mergeAll = true;
             continue;
         }
+
+        if (arg == "--merge=")
+        {
+          clco = atof(argVal.c_str());
+          mergeClco = true;
+          continue;
+        }
         // unrecognized --option
 
         if (is_prefix_of(arg, "--"))
@@ -256,7 +260,7 @@ void DistanceCommand::get_vectors()
 }
 
 void DistanceCommand::compute_hamming()
-{   
+{
     n = bf_vectors.size();
     u64 nbits = endPosition - startPosition;
     u64 nbytes = (nbits + 7) / 8;
@@ -280,62 +284,13 @@ void DistanceCommand::compute_hamming()
     {
         for (u32 w=v+1; w<n; w++)
         {
-#if defined(__SSE2__) && defined(USE_SSE)
-            dham = sse_hamming((u8*)bv_vectors[v], (u8*)bv_vectors[w], nbits*8);
-#else
             dham = hamming_distance(bv_vectors[v], bv_vectors[w], nbits);
-#endif
             rham = 1.0*dham/nbits;
             matrix[v][w] = rham;
             matrix[w][v] = rham;
         }
     }
 }
-
-void DistanceCommand::compute_hamming2()
-{
-    std::ifstream in(listFilename);
-    if (!in)
-        fatal("Unable to open " + listFilename);
-
-    n = bf_vectors.size();
-    u64 nbits = endPosition - startPosition;
-    u64 first = startPosition / 8;
-    u64 end = endPosition / 8;
-    u64 nbytes = (nbits + 7) / 8;
-
-    uint8_t* data[n];
-    matrix = new double*[n]();
-    for (int i=0; i<n; i++)
-    {
-        matrix[i] = new double[n]();
-        data[i] = new uint8_t[nbytes]();
-        bf_vectors[i]->load();
-        memcpy(data[i], reinterpret_cast<u8*>(bf_vectors[i]->bits->data())+first, nbytes);
-        delete bf_vectors[i];
-    }
-
-    u64 dham;
-    double rham;
-    for (u32 v=0; v<n; v++)
-    {
-        for (u32 w=v+1; w<n; w++)
-        {
-#if defined(__SSE2__) && defined(USE_SSE)
-            dham = sse_hamming(data[v], data[w], nbits*8);
-#else
-            dham = hamming_distance(data[v], data[w], nbits);
-#endif
-            rham = 1.0*dham/nbits;
-            matrix[v][w] = rham;
-            matrix[w][v] = rham;
-        }
-    }
-
-    for (int i=0; i<n; i++)
-        delete[] data[i];
-}
-
 void DistanceCommand::disk_hamming()
 {
     std::ifstream in(listFilename);
@@ -373,11 +328,8 @@ void DistanceCommand::disk_hamming()
         {
             dvec[w]->load();
             u64* second = dvec[w]->bvs[0]->bits->data();
-#if defined(__SSE2__) && defined(USE_SSE)
-            dham = sse_hamming((u8*)first, (u8*)second, nbits*8);
-#else
             dham = hamming_distance(first, second, nbits);
-#endif
+            //cout <<
             rham = 1.0*dham/nbits;
             matrix[v][w] = rham;
             matrix[w][v] = rham;
@@ -481,19 +433,16 @@ int DistanceCommand::execute()
     if (!mergeAll)
     {
         get_vectors();
-        if (full_vec)
-            compute_hamming();
-        else
-            compute_hamming2();
+        compute_hamming();
         dump_matrix();
     }
-    else if (mergeAll && path_matrix.size())
+    else if ((mergeAll || mergeClco) && path_matrix.size())
     {
         load_matrix(path_matrix);
         graph = new DistanceGraph(matrix, threshold, n);
         graph->dump_graph(listFilename);
         graph->dump_adj_matrix();
-        graph->compute_cliques();
+        graph->compute_cliques(clco, mergeAll);
         merge();
     }
     return 0;
@@ -554,17 +503,17 @@ void DistanceGraph::dump_adj_matrix()
     }
 }
 
-void DistanceGraph::compute_cliques()
+void DistanceGraph::compute_cliques(double clco, bool only_cc)
 {
     char buffer[1024];
-#if __APPLE__
-    uint32_t size = 1024;
-    _NSGetExecutablePath(buffer, &size);
-#else
     readlink("/proc/self/exe", buffer, 1024);
-#endif
     string dir_bin = dirname(buffer);
-    string cmd = "python3 " + dir_bin + "/max_cliques.py adj_matrix.txt max_cliques.txt > /dev/null";
+
+    string cmd;
+    if (only_cc)
+      cmd = "python3 " + dir_bin + "/max_cliques.py adj_matrix.txt > /dev/null";
+    else
+      cmd = "python3 " + dir_bin + "/max_cliques.py adj_matrix.txt " + std::to_string(clco) + " > /dev/null";
     system(cmd.c_str());
     ifstream in_f("max_cliques_wo_overlap.txt", ios::in);
     string line;
@@ -576,7 +525,7 @@ void DistanceGraph::compute_cliques()
         istream_iterator<std::string> end;
         vector<string> vstrings(begin, end);
         vector<int> tmp;
-        transform(vstrings.begin(), vstrings.end(), back_inserter(tmp), 
+        transform(vstrings.begin(), vstrings.end(), back_inserter(tmp),
             [](const string& str) {return stoi(str);}
         );
         cliques[n].push_back(tmp);
@@ -610,7 +559,7 @@ void DistanceGraph::dump_graph(string labels_path)
     {
         bin_graph.write((char*)_graph[i], sizeof(uint8_t)*_nbv);
     }
-    
+
     dot_graph << "graph G {" << "\n";
 
     for (int i=0; i<_nbv; i++)
@@ -665,7 +614,7 @@ void DistanceGraph::dump_graph(string labels_path)
 //        {
 //            carray[l] = j;
 //            if (is_clique(l+1))
-//            {    
+//            {
 //                if (l<k)
 //                {
 //                    find_cliques_k(j, l+1, k);
@@ -675,7 +624,7 @@ void DistanceGraph::dump_graph(string labels_path)
 //                    add(l+1, k);
 //                }
 //            }
-//        
+//
 //        }
 //    }
 //
