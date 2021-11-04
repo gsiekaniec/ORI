@@ -113,7 +113,7 @@ if __name__ == '__main__':
     
     optional_length.add_argument('--outfile', '-out', dest='out', 
     default='length.txt', 
-    help='Out file containing one genome name and length per line.'
+    help='Out file containing one genome name and length per line. Default: length.txt.'
     )
     
     optional_length.add_argument('--seed_size', '-s', dest='seed_size', 
@@ -256,10 +256,21 @@ if __name__ == '__main__':
     help="Hamming matrix file."
     )
     
+    required_threshold.add_argument('--names', '-n', metavar='LEAFNAME',
+    required=True, 
+    help='Name of strains in the same order than in matrix.'
+    )
+    
     optional_threshold.add_argument('--threshold', '-t', dest='threshold', metavar='THRESHOLD', 
     default=0.0002, 
     help='Threshold. This threshold will be displayed on the histogram. Default: 0.0002'
     )
+
+    optional_threshold.add_argument('--output', '-o', metavar='OUTPUT',
+    default='heatmap_names.txt', 
+    help='File containing the names of the strains having at least one sibling with their number of sibling strains. Default: heatmap_names.txt.'
+    )
+    
 
     parser_threshold.set_defaults(parser_matrix=False, parser_identification=False,parser_length=False,parser_merge_length=False, parser_clean=False, parser_suppr_reads=False, parser_beautiful_results=False, parser_threshold=True)
     

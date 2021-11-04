@@ -6,6 +6,7 @@ import clyngor
 from clyngor import solve
 from operator import itemgetter
 from python_scripts.EMalgo import vraissemblance, expectation, maximization
+from pathlib import Path
 
 ASP="""\
 
@@ -103,29 +104,38 @@ def get_length(lengthFile: str) -> dict:
     '''Extract the length of each strains from the file'''
     
     lengths = {}
-    with open(lengthFile,'r') as f:
-        for line in f:
-            line = line.strip().split('\t')
-            genome = line[0]
-            length = line[1]
-            lengths[genome]=length
+    try:
+        with open(lengthFile,'r') as f:
+            for line in f:
+                if len(line.strip().split('\t')) != 3:
+                    raise ValueError(f'Incorrect \'{lengthFile}\' lengths file !')
+                line = line.strip().split('\t')
+                genome = line[0]
+                length = line[1]
+                lengths[genome]=length
+    except ValueError:
+        raise
     return lengths
             
         
 def read_species_names(filename: str) -> str:
     '''Get the names of the strains.
     Return each atom species({number},"{name}")'''
-    
     names = []
-    with open(filename) as fd:
-        for i,l in enumerate(fd):
-            name = l.strip()
-            num = i+1
-            name = name
-            names.append(f'species({num},"{name}").')
-    return('\n'.join(names)+'\n')
+    try:
+        with open(filename) as fd:
+            for i,l in enumerate(fd):
+                if len(" ".join(l.strip().split('\t')).split(' ')) > 1:
+                    raise ValueError(f'Names file {filename} does not contain one strain per line !')
+                name = l.strip()
+                num = i+1
+                name = name
+                names.append(f'species({num},"{name}").')
+    except ValueError:
+        raise
+    return('\n'.join(names)+'\n',num)
 
-def read_matrix(filename: str,nbchoices: int,threshold: float) -> str:
+def read_matrix(filename: str,nbchoices: int,threshold: float,nb_strains: int,listname: str) -> str:
     '''Get the strains for each read from the matrix. 
     Return each atom readsstrainsrank(read_number, strain_number, rank).''' 
     
@@ -138,6 +148,13 @@ def read_matrix(filename: str,nbchoices: int,threshold: float) -> str:
         for line in fd:
             i=i+1
             sline=line.strip().split(" ")
+            nb_strains = 3
+            if i == 1:
+                try:
+                    if not nb_strains == len(sline):
+                        raise ValueError(f'File {filename} does not contains the same strains number than the {listname} names file !')
+                except ValueError:
+                    raise
             vector = []
             for j,w in enumerate(sline):
                 if (decimal.Decimal(w)*100) >= int(threshold):
@@ -231,14 +248,69 @@ def calcul_abondance(out,strains,nb_strains,abondances,reads,length):
         for i,s in enumerate(strains):
             o.write(f'{s} : {round(abondances[i],2)}\n')
 
+def isfloat(value):
+    try:
+        float(value)
+        return True
+    except ValueError:
+        return False
+
 def main(args):
+    
+    ####Tests
+    try:
+        if not Path(args.matrix).is_file():
+            raise FileNotFoundError(f'File \'{args.matrix}\' doesn\'t exist !')
+    except FileNotFoundError:
+        raise
+    
+    try:
+        if not Path(args.length).is_file():
+            raise FileNotFoundError(f'File \'{args.length}\' doesn\'t exist !')
+    except FileNotFoundError:
+        raise
+    
+    try:
+        if not Path(args.file).is_file():
+            raise FileNotFoundError(f'File \'{args.file}\' doesn\'t exist !')
+    except FileNotFoundError:
+        raise
+    
+    try:
+        if not Path(args.listname).is_file():
+            raise FileNotFoundError(f'File \'{args.listname}\' doesn\'t exist !')
+    except FileNotFoundError:
+        raise
+    
+    try:
+        if not isfloat(args.threshold):
+            raise ValueError(f'Threshold \'{args.threshold}\' is not a number !')
+        elif float(args.threshold) < 0 or float(args.threshold) > 100:
+            raise ValueError(f'Threshold \'{args.threshold}\' is not a valid number ! (must be between 0 and 100 (%))')
+    except ValueError:
+        raise
+    
+    try:
+        if not Path(args.output).resolve().parent.exists() or Path(args.output).resolve().parent.is_file():
+            raise FileNotFoundError(f'Directory of the output file \'{args.output}\' doesn\'t exist ! Please create the directory first!')
+    except FileNotFoundError:
+        raise
+    output = Path(args.output)
+    output.touch(exist_ok=True) 
+    try:
+        if not output.is_file():
+            raise IsADirectoryError(f'\'{args.output}\' is a directory not an output file !')
+    except IsADirectoryError:
+        raise
+    
+    ####
     
     clyngor.CLINGO_BIN_PATH = args.clingo_path
     
     #Get the strains names 
-    names = read_species_names(args.listname)
+    names,nb_strains = read_species_names(args.listname)
     #Get the strains for every reads
-    strainsreads = read_matrix(args.matrix,args.nbchoices,args.threshold)
+    strainsreads = read_matrix(args.matrix,args.nbchoices,args.threshold,nb_strains,args.listname)
     
     #Get genomes length
     lengths = get_length(args.length)
@@ -249,11 +321,15 @@ def main(args):
     
     #order the ASP script to run in toexec and solve it
     toexec = constante+matrix+names+strainsreads+ASP
-    answers = solve(inline=toexec,options='--opt-mode=optN')
-    
+    try:
+        answers = solve(inline=toexec,options='--opt-mode=optN')
+    except FileNotFoundError:
+        print(f'\nWrong clingo path \'{args.clingo_path}\' !\n')
+        raise
     strains_in = set()
     i=0
     models = []
+    
     for answer,optimization,optimality,answerNumber in answers.with_answer_number:    
         #print(f'Answer {i+1}',optimization,optimality,answerNumber)
         if optimality:
@@ -324,8 +400,12 @@ def main(args):
         try :
             longueurs.append(float(lengths[s]))
         except KeyError:
-            s = '-'.join(s.split('_'))
-            longueurs.append(float(lengths[s]))
+            try:
+                s = '-'.join(s.split('_'))
+                longueurs.append(float(lengths[s]))
+            except KeyError:
+                print(f'File {args.length} does not contains the same strains than {args.listname}')
+                raise
     
     #Compute the abondance for each strain and write the output file
     calcul_abondance(args.output,strains,nb_strains,abondances,reads,longueurs)

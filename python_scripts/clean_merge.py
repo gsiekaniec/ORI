@@ -2,12 +2,18 @@
 # coding: utf-8
 
 import os
+from pathlib import Path
 
 def get_names(name_file : str) -> list:
     names = []
-    with open(name_file,'r') as f:
-        for line in f :
-            names.append(line.strip())
+    try:
+        with open(name_file,'r') as f:
+            for line in f :
+                if len(line.strip().split(' ')) > 1:
+                    raise ValueError(f'Incorrect \'{name_file}\' names file !')
+                names.append(line.strip())
+    except ValueError:
+        raise
     return names
     
 def bad_files_suppression_list (repository : str, names : list) -> list:
@@ -23,6 +29,37 @@ def bad_files_suppression_list (repository : str, names : list) -> list:
     return to_suppr
     
 def main(args):
+    
+    ####Tests
+    try:
+        if not Path(args.names).is_file():
+            raise FileNotFoundError(f'File \'{args.names}\' doesn\'t exist !')
+    except FileNotFoundError:
+        raise
+
+    try:
+        if not Path(args.repository).exists():
+            raise FileNotFoundError(f'\'{args.repository}\' doesn\'t exists !')
+        elif not Path(args.repository).is_dir():
+            raise NotADirectoryError(f'\'{args.repository}\' isn\'t a directory !')
+    except NotADirectoryError:
+        raise
+    except FileNotFoundError:
+        raise
+        
+    try:
+        if not Path(args.out).resolve().parent.exists() or Path(args.out).resolve().parent.is_file():
+            raise FileNotFoundError(f'Directory of the output file \'{args.out}\' doesn\'t exist ! Please create the directory first!')
+    except FileNotFoundError:
+        raise
+    output = Path(args.out)
+    output.touch(exist_ok=True) 
+    try:
+        if not output.is_file():
+            raise IsADirectoryError(f'\'{args.out}\' is a directory not an output file !')
+    except IsADirectoryError:
+        raise
+    ####
     
     names = get_names(args.names)
     

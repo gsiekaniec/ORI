@@ -5,9 +5,10 @@ import os
 import statistics
 import math
 import gzip
+from pathlib import Path
 
 def iterFastq (file: str, threshold: int, length:int, gz: bool, nb_read_tot: int, general_length: int) -> (tuple):
-    '''Lis un fichier fastq '''
+    '''Read a fastq file'''
     if gz:
         f = gzip.open(file, 'rb')
     else :
@@ -34,7 +35,45 @@ def iterFastq (file: str, threshold: int, length:int, gz: bool, nb_read_tot: int
             
     f.close()  
 
+def isfloat(value):
+    try:
+        float(value)
+        return True
+    except ValueError:
+        return False
+
 def run (file: str, threshold: float, length:int, gz: bool):
+
+    
+    ####Tests
+    try:
+        if not Path(file).is_file():
+            raise FileNotFoundError(f'File \'{file}\' doesn\'t exist !')
+    except FileNotFoundError:
+        raise
+        
+    
+    if threshold != None:
+        try:
+            if not isfloat(threshold):
+                raise ValueError(f'Quality threshold \'{threshold}\' is not an integer !')
+            elif float(threshold) < 0:
+                raise ValueError(f'Quality threshold \'{threshold}\' is not valid ! (must be positive)')
+            threshold = float(threshold)
+        except ValueError:
+            raise
+    
+    if length != None:
+        try :
+            if not isinstance(length, (int)):
+                if not length.isnumeric():
+                    raise ValueError(f'Seed_size \'{length}\' is not a valid number ! (must be a positive integer)')
+            length = int(length)
+        except ValueError:
+            raise
+    
+    ####
+    
     out = file_to_save (file, threshold)
     print (f"Write reads in : {out}")
     o = open(out,'w')
@@ -60,9 +99,4 @@ def file_to_save (file: str, threshold: int) -> str:
     return out
     
 def main(args):
-    
-    os.system("date '+%F -> %T'")
-    print ("Start")
-    run(args.fastq,float(args.qualityMin),int(args.lengthMin),args.gzip)
-    print ("End")
-    os.system("date '+%F -> %T'")
+    run(args.fastq,args.qualityMin,args.lengthMin,args.gzip)

@@ -4,6 +4,7 @@
 import os
 import numpy as np
 from itertools import groupby
+from pathlib import Path
 
 def iter_fasta (file: str) -> str :
     '''Iteration on the genomes'''
@@ -14,7 +15,53 @@ def iter_fasta (file: str) -> str :
         yield (seq)
     f.close()
 
+def isfloat(value):
+    try:
+        float(value)
+        return True
+    except ValueError:
+        return False
+
 def get_length(genomes,out,seed_size,false_positif_rate):
+    ####Tests
+    try:
+        if not Path(out).resolve().parent.exists() or Path(out).resolve().parent.is_file():
+            raise FileNotFoundError(f'Directory of the output file \'{out}\' doesn\'t exist ! Please create the directory first!')
+    except FileNotFoundError:
+        raise
+    output = Path(out)
+    output.touch(exist_ok=True) 
+    try:
+        if not output.is_file():
+            raise IsADirectoryError(f'\'{out}\' is a directory not an output file !')
+    except IsADirectoryError:
+        raise
+    try:
+        if not Path(genomes).exists():
+            raise FileNotFoundError(f'\'{genomes}\' doesn\'t exists !')
+        elif not Path(genomes).is_dir():
+            raise NotADirectoryError(f'\'{genomes}\' isn\'t a directory !')
+    except NotADirectoryError:
+        raise
+    except FileNotFoundError:
+        raise
+    if seed_size != None:
+        try :
+            if not seed_size.isnumeric():
+                raise ValueError(f'Seed_size \'{seed_size}\' is not a valid number ! (must be a positive integer)')
+        except ValueError:
+            raise
+    if false_positif_rate != None:
+        try:
+            if not isfloat(false_positif_rate):
+                raise ValueError(f'False positif rate \'{false_positif_rate}\' is not a float !')
+            elif float(false_positif_rate) < 0 or float(false_positif_rate) > 1:
+                raise ValueError(f'False positif rate \'{false_positif_rate}\' is not valid ! (must be between 0 and 1)')
+            false_positif_rate = float(false_positif_rate)
+        except ValueError:
+            raise
+    ####
+    
     maximum_length = 0
     genomes_length = {}
     genomes_order = []
@@ -42,7 +89,7 @@ def get_length(genomes,out,seed_size,false_positif_rate):
             print(f'{len_bf}')
 
 def main(args):
-    get_length(args.genomes,args.out,args.seed_size,float(args.false_positif_rate))
+    get_length(args.genomes,args.out,args.seed_size,args.false_positif_rate)
     
 
 if __name__ == "__main__":
