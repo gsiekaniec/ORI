@@ -4,7 +4,7 @@
 
 **ORI** (Oxford nanopore Reads Identification) is a software using long nanopore reads to identify bacterial strains. 
 
-Information about installing and using ORI is available on the ORI's [wiki](https://github.com/gsiekaniec/ORI/wiki).
+Informations about installing and using ORI is available on the ORI's [wiki](https://github.com/gsiekaniec/ORI/wiki).
 
 <p align="center" width="100%">
   <a href="https://github.com/gsiekaniec/ORI/wiki">
