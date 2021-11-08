@@ -1,4 +1,4 @@
-# <img src="img/ORI.png" alt="ORI" width="3000"/>
+# <img src="../img/ORI.png" alt="ORI" width="3000"/>
 
 **ORI example** : small example of how to create an index containing 25 *Streptococcus thermophilus* strains with merged of the sibling strains and queried with a fastq file containing 2 strains (*Streptococcus thermophilus* JIM8232 and CIRM67). 
 
