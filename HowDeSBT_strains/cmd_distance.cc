@@ -149,7 +149,7 @@ void DistanceCommand::parse(int _argc,
             continue;
         }
 
-        if (arg == "--merge=")
+        if (is_prefix_of("--merge="))
         {
           clco = atof(argVal.c_str());
           mergeClco = true;
