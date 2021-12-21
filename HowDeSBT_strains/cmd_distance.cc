@@ -430,7 +430,7 @@ DistanceCommand::~DistanceCommand()
 
 int DistanceCommand::execute()
 {
-    if (!mergeAll)
+    if (!mergeAll && !mergeClco)
     {
         get_vectors();
         compute_hamming();
@@ -516,6 +516,11 @@ void DistanceGraph::compute_cliques(double clco, bool only_cc)
       cmd = "python3 " + dir_bin + "/max_cliques.py adj_matrix.txt " + std::to_string(clco) + " > /dev/null";
     system(cmd.c_str());
     ifstream in_f("max_cliques_wo_overlap.txt", ios::in);
+    if (!in_f.good())
+    {
+      std::cerr << "Unable to compute connected component/cliques." << std::endl;
+      exit(EXIT_FAILURE);
+    }
     string line;
     int n = 0;
     while (getline(in_f, line))
