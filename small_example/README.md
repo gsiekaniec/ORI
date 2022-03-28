@@ -25,7 +25,7 @@ ORI.py clean_merge -n leafname -r . -o list_number_file.txt
 ls *.bf > leafname_merge
 ORI.py merge_length -b leafname_merge -l length.txt -c list_number_file.txt -o merge_length.txt
 #
-howdesbt cluster --list=leafname/or/leafname_merge --tree=union.sbt --nodename=node{number} --cull
+howdesbt cluster --list=leafname_merge --tree=union.sbt --nodename=node{number} --cull
 howdesbt build --howde --tree=union.sbt --outtree=howde.sbt
 ls | grep -Pv 'detbrief.rrr.' | grep '.bf' | xargs rm --
 #
