@@ -20,6 +20,7 @@ ls *.bf > leafname
 #merge sibling strains
 howdesbt distance --list=leafname
 ORI.py threshold -n leafname -m hamming_matrix.tsv -t 0.0002
+howdesbt distance --list=leafname --threshold=0.0002 --matrix=hamming_matrix.bin --merge
 ORI.py clean_merge -n leafname -r . -o list_number_file.txt
 ls *.bf > leafname_merge
 ORI.py merge_length -b leafname_merge -l length.txt -c list_number_file.txt -o merge_length.txt
