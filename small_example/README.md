@@ -19,7 +19,7 @@ howdesbt makebfQ --k=15 --qgram=seedfile.txt --bits=0.02G *.fna
 ls *.bf > leafname
 #merge sibling strains
 howdesbt distance --list=leafname
-ORI.py threshold -m hamming_matrix.tsv -t 0.0002
+ORI.py threshold -n leafname -m hamming_matrix.tsv -t 0.0002
 ORI.py clean_merge -n leafname -r . -o list_number_file.txt
 ls *.bf > leafname_merge
 ORI.py merge_length -b leafname_merge -l length.txt -c list_number_file.txt -o merge_length.txt
