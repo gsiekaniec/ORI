@@ -33,7 +33,7 @@ ls | grep -Pv 'detbrief.rrr.' | grep '.bf' | xargs rm --
 #Query part
 ORI.py suppr_bad_reads -fq ../reads/2strains.fastq -q 10 -l 2000
 head -n 16000 ../reads/2strains_better_than_10.fastq > ../reads/2strains_4000_reads.fq
-howdesbt queryQ --sort --qgram=seedfile.txt --tree=howde.sbt --threshold=0.5 2strains_4000_reads.fq > results_howde.txt
+howdesbt queryQ --sort --qgram=seedfile.txt --tree=howde.sbt --threshold=0.5 ../reads/2strains_4000_reads.fq > results_howde.txt
 ORI.py matrix -f results_howde.txt -l leafname_merge -o matrix.tsv
 #
 
