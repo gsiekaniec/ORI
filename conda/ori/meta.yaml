@@ -1,5 +1,5 @@
 package:
-  name: ori
+  name: ori-dev
   version: "0.0.2"
 
 source:
@@ -26,7 +26,7 @@ requirements:
 
 about:
   home: https://github.com/gsiekaniec/ORI
-  license: MIT
+  license: AGPL-3.0
   summary: ORI (Oxford nanopore Reads Identification) is a software allowing, from long nanopore reads, to identify the bacterial strains present in a sample.
   dev_url: https://github.com/gsiekaniec/ORI
 
