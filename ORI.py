@@ -93,9 +93,17 @@ if __name__ == '__main__':
     help='Minimum percent value in the matrix for association between reads and species.'
     ) 
     optional_identification.add_argument('--nbchoices', '-n', dest='nbchoices', metavar='NB_CHOICE',
-    default=12, 
+    default=10,
     help='Only the nbchoices maximum values of a row are considered. Warning, must be less or equal to the number of species.'
     )    
+    optional_identification.add_argument('--margin', '-marg', type=int, dest='margin', metavar='MARGIN',
+    default=40,
+    help=' No more than  nbchoices*(1+ margin/100) non 0 values to retain a row and less than nbchoices/(1+ margin/100) non 0 values to identify the best rows.'
+    )
+    optional_identification.add_argument('--highpass', '-hp', type=int, dest='highpass', metavar='HIGHPASS',
+    default=70,
+    help='Minimum qgram proportion in the matrix for keeping strains, assumed to be >=threshold'
+    )
 
     parser_identification.set_defaults(parser_identification=True,parser_matrix=False,parser_length=False,parser_merge_length=False, parser_clean=False, parser_suppr_reads=False, parser_beautiful_results=False, parser_threshold=False)
 

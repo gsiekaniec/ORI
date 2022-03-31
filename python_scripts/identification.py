@@ -10,172 +10,208 @@ from pathlib import Path
 
 ASP="""\
 
-input(F):- matrixreadspecies(nf,F).
+parameter(threshold(threshold)).  parameter(nbchoices(nbchoices)).
+parameter(margin(margin)).        parameter(highpass(highpass)).
+parameter(parsimony(parsimony)).  parameter(rank0(rank0)).
 
-speciesread(S,I,W):- matrixreadspecies(nf,Filematrix); readsstrainsrank(I,J,W); species(J,S).
-speciesread(S,I):- speciesread(S,I,_).
+data(J,F,I,W,R):-  readsstrainsrank(F,I,J,W,R); strain(J,S).
+%strainread(Strain name,Read number,Rank of the strain in the read)
+strainread(S,I,R):- data(J,_,I,_,R), strain(J,S).
+strainread(S,I):- strainread(S,I,_).
 
-
-% Subsets names (species) and  elements of the set (reads)
-subset(S) :- speciesread(S,_).
-element(X) :- speciesread(_,X).
+% Selected subsets (strain names) and  elements of the subset (reads)
+% A strain is candidate for identification 
+% if it is present with a minimum of highpass qgram proportion 
+% in at least one best read (with low ambiguity)
+subset(S):- data(J,"best",_,W,_), strain(J,S), W>highpass.
+element(X) :- strainread(S,X), subset(S).
 
 nb(subset(N)):- N={subset(X)}.
 nb(element(N)):- N={element(X)}.
-nb(weight(N)):- N=#sum{W,S,X:speciesread(S,X,W)}.
 
+totrank(N):- N=#sum{R,S,X:strainread(S,X,R), subset(S)}.
 
-% Compute the threshold for the size of marginal subsets (under this threshold, subsets are considered marginal): 
+% Compute the threshold for the size of marginal subsets 
+%(under this threshold, subsets are considered marginal): 
 % it's 1% of elements (reads)
-onepercentelement((N+50)/100):- nb(element(N)).
-% Compute the threshold for the weight of marginal subsets (under this threshold, subsets are considered marginal): 
-% it's 2% of the total weight of elements (read ranks)
-twopercentweight((N+25)/50):- nb(weight(N)).
+onepercentelement((N+1)/100):- nb(element(N)).
+% Compute the threshold for the sum of ranks of marginal subsets 
+% it's 2% of the total sum of ranks of elements (read ranks)
+%twopercenttotrank((N+1)/50):- totrank(N).
 
-marginal(S):- onepercentelement(N); subset(S); {speciesread(S,X)}N.
-marginal(S):- twopercentweight(N); subset(S); #sum{W,X:speciesread(S,X,W)}N.
-marginal_element(X):- marginal(S); speciesread(S,X).
+
+% A strain is marginal if it is associated to less than 1% of the reads
+marginal(S):- onepercentelement(N), subset(S), {strainread(S,X)}N-1.
+
+marginal_element(X):- marginal(S), strainread(S,X).
+
+remainingsubset(S):- subset(S), not marginal(S).
+nb(remainingsubset(N)):- N={remainingsubset(X)}.
+remainingelement(X):- subset(S), not marginal(S), strainread(S,X).
+nb(remainingelement(N)):- N={remainingelement(X)}.
+
+%Sum of ranks of elements covered by a remaining subset
+totrank(S,N):- remainingsubset(S); N=#sum{R,X:strainread(S,X,R)}.
 
 
 % Choose the subsets, at least one
 % The solution is made of non marginal selected strains
 %---------------------------------------------------------
-1{ choice(S):subset(S), not marginal(S) }.
+1{ choice(S): remainingsubset(S)}.
 
+ranksupport(X,N):- remainingelement(X), N= #min{R: strainread(S,X,R), remainingsubset(S), choice(S)}.
 
-%Statistics on the number/weight of elements covered by a chosen subset
-wsupport(S,N):- choice(S); N=#sum{W,X:speciesread(S,X,W)}.
+% A chosen subset (strain) S is signed with an element (read) X 
+%1) if it is the sole chosen subset covering this element and has rank at most 1
+signedsubset1(S,X,R):- choice(S); remainingelement(X); strainread(S,X,R); R<2; {strainread(T,X):choice(T)}1.
+%2) if there are exactly two subsets covering the element, 
+%   but S has a better support than the other, which is not a signedsubset1 subset
+signedsubset2(S,X,R):- choice(S); remainingelement(X); strainread(S,X,R); choice(S2); not signedsubset1(S2,_,_); 
+    strainread(S2,X,R2); R<R2; R<2; 2{strainread(T,X):choice(T)}2.
 
-
-% A chosen subset (species) S is signed with an element (read) X 
-%1) if it is the sole chosen subset covering this element
-signedsubset1(S,X,W):- choice(S); speciesread(S,X,W); W>0; {speciesread(T,X):choice(T)}1.
-%2) if there are exactly two subsets covering the element, but S has a better support than the other, which is not a signedsubset1 subset
-%signedsubset2(S,X,W):- choice(S); speciesread(S,X,W); choice(S2); not signedsubset1(S2,_,_); speciesread(S2,X,W2); W>W2;  2{speciesread(T,X):choice(T)}2; not sol(S).
-signedsubset2(S,X,W):- choice(S); speciesread(S,X,W); choice(S2); not signedsubset1(S2,_,_); speciesread(S2,X,W2); W>W2; W>1; 2{speciesread(T,X):choice(T)}2; not sol(S).
-
-signedsubset(S,X,W):- signedsubset1(S,X,W).
-signedsubset(S,X,W):- signedsubset2(S,X,W).
+signedsubset(S,X,R):- signedsubset1(S,X,R).
+signedsubset(S,X,R):- signedsubset2(S,X,R).
 signedsubset(S,X):- signedsubset(S,X,_).
 
+%Statistics on the sum of ranks of elements covered by a chosen signed subset
+specranksupport(S,N):- N=#sum{R,X:signedsubset(S,X,R)}; choice(S). 
 
-%Statistics on the number/weight of elements covered by an chosen signed subset
-specwsupport(S,N):- N=#sum{W,X:signedsubset(S,X,W)}; N>0; choice(S). 
+% Constraints on represented elements (reads) and selected subsets (strains)
+%--------------------------------------------------------------------------
 
+% For each non marginal element, some subset must be chosen
+:- element(X); not marginal_element(X); not choice(S) : strainread(S,X).
 
-%An element (read) is specific if it is covered by at most one chosen subset
-specific(X) :- element(X); { choice(S) : speciesread(S,X) } 1.
+%A subset (strain) is specific of an element (read) if the element is covered by no other chosen strain
+specific(S) :- element(X), 1{ choice(Y) : strainread(Y,X) } 1, strainread(S,X).
+%A subset (strain) is established if it appears with rank 0 in at least rank0 elements (reads)
+established(S):- choice(S), rank0{strainread(S,_,0)}.
 
-%Constraints
-%-----------
-
-% For each element, some subset must be chosen
-:- element(X); not marginal_element(X); not choice(S) : speciesread(S,X).
-
-% Each selection must be justified by some specific element
-:- choice(S), not specific(X) : speciesread(S,X).
+%Each selection (strain) must be either established or specific of an element (read)
+:- choice(S), not specific(S), not established(S).
 
 
 % Optimization
 %-------------
 
-
 %Minimize the number of chosen subsets that are not marginal
-#minimize{1@10,S:choice(S)}.
+% and the corresponding total rank support
+#minimize{parsimony@5,S:choice(S)}.
+#minimize {N@5,X:ranksupport(X,N),N!=#sup}.
 
-%Maximize the total weighted support, then the total weighted specific support
-#maximize {N@5,S:wsupport(S,N)}.
-#maximize {N@3,S:specwsupport(S,N)}.
+%Then Minimize the total specific rank support
+#minimize {N@3,S:specranksupport(S,N)}.
 
 
 %Solution restricted to signed subsets
-identified(S):- choice(S); specwsupport(S,N).
+identified(S):- choice(S); specranksupport(S,N).
 
 
 %Output
 %------
-
-#show parameters/3.
-#show nb/1.
+%#show parameter/1.
+%#show marginal/1.
+%#show nb/1.
 #show identified/1.
 """
 
+
 def get_length(lengthFile: str) -> dict:
-    '''Extract the length of each strains from the file'''
-    
+    '''Extract the length of each strain from the file'''
+
     lengths = {}
     try:
-        with open(lengthFile,'r') as f:
+        with open(lengthFile, 'r') as f:
             for line in f:
-                if len(line.strip().split('\t')) != 3:
+                if len(line.strip().split('\t')) != 3 and len(line.strip().split('\t')) != 2:
+                    print(len(line.strip().split('\t')), line)
                     raise ValueError(f'Incorrect \'{lengthFile}\' lengths file !')
                 line = line.strip().split('\t')
                 genome = line[0]
                 length = line[1]
-                lengths[genome]=length
+                lengths[genome] = length
     except ValueError:
         raise
     return lengths
-            
-        
+
+
 def read_species_names(filename: str) -> str:
     '''Get the names of the strains.
     Return each atom species({number},"{name}")'''
     names = []
     try:
         with open(filename) as fd:
-            for i,l in enumerate(fd):
+            for i, l in enumerate(fd):
                 if len(" ".join(l.strip().split('\t')).split(' ')) > 1:
                     raise ValueError(f'Names file {filename} does not contain one strain per line !')
                 name = l.strip()
-                num = i+1
+                num = i + 1
                 name = name
-                names.append(f'species({num},"{name}").')
+                names.append(f'strain({num},"{name}").')
     except ValueError:
         raise
-    return('\n'.join(names)+'\n',num)
+    return ('\n'.join(names) + '\n', num)
 
-def read_matrix(filename: str,nbchoices: int,threshold: float,nb_strains: int,listname: str) -> str:
-    '''Get the strains for each read from the matrix. 
-    Return each atom readsstrainsrank(read_number, strain_number, rank).''' 
-    
-    decimal.getcontext().prec = 2
-    l=[]
-    i=0
+
+def read_matrix(filename: str, nbchoices: int, threshold: float, margin: int, nb_strains: int, listname: str) -> str:
+    '''Get the strains for each read from the matrix.
+    Preprocessing of matrix data, using two parameters, nbchoices and threshold:
+    - Deletion of values < threshold;
+    - Rounding the weights with three significant digits after the decimal point;
+    - Deletion of rows that contain >= nbchoices*(1+ margin/100) values (>= threshold)
+    (the read is considered to be ubiquitous and not useful for identification)
+    - Flag rows that contain <= nbchoices/(1+ margin/100) values (>= threshold)
+    - Sorting the values by descending values and keeping the nbchoices largest ones.
+    - Replace values by their rank, rank 0 for the largest value, same rank for ties, rank increasing with decreasing values.
+
+    Return each atom readsstrainsrank(read_number, strain_number, rank).'''
+
+    decimal.getcontext().prec = 3
+    l = []  # List of strain ranks for each selected read
+    i = 0  # Current number of selected reads
     nbchoices = int(nbchoices)
-    
+    mg = 1 + margin / 100
+
     with open(filename) as fd:
         for line in fd:
-            i=i+1
-            sline=line.strip().split(" ")
-            nb_strains = 3
+            i = i + 1
+            sline = line.strip().split(" ")
             if i == 1:
                 try:
-                    if not nb_strains == len(sline):
-                        raise ValueError(f'File {filename} does not contains the same strains number than the {listname} names file !')
+                    if nb_strains != len(sline):
+                        raise ValueError(
+                            f'File {filename} does not contains the same  number of strains than the {listname} names file !')
                 except ValueError:
                     raise
-            vector = []
-            for j,w in enumerate(sline):
-                if (decimal.Decimal(w)*100) >= int(threshold):
-                    vector.append((j+1,int(decimal.Decimal(w)*100))) 
-            if len(vector)< int(nbchoices*1.5):
-                a = rank_list(nbchoices,i,vector)
-                l.extend(a)
-    return('\n'.join(l)+'\n')
+            vector = [(j + 1, int(decimal.Decimal(w) * 100)) for j, w in enumerate(sline) if
+                      (decimal.Decimal(w) * 100) >= int(threshold)]
 
-def rank_list(n: int, ident: str, x: int) -> str:
-    ''' Gives the rank of at most n greatest elements greater than th in a list x with possible ties
-    Returns triplets (id, index in x, rank in x)'''
-    m= len(x)
-    mn=min(n,m)
+            if len(vector) > 0 and len(vector) < int(nbchoices * mg):  # read is neither empty or ubiquitous
+                if len(vector) <= int(
+                        nbchoices / mg):  # compute a flag best or std, depending on the identification ambiguity of reads
+                    l.extend(rank_list(nbchoices, "best", i, vector))  # best reads contain few strain choices
+                else:
+                    l.extend(rank_list(nbchoices, "std", i,
+                                       vector))  # std reads contain more strain choices, at most nbchoices
+    return ('\n'.join(l) + '\n')
+
+
+def rank_list(n: int, flag: str, ident: str, x: int) -> str:
+    ''' Provides the rank of at most n greatest elements in a list x of strains weights with possible ties
+        Returns tuples (flag  for the selected read, id of selected read, index in x (=strain id),
+                        weight of the strain element, rank of the strain element in x)'''
+    m = len(x)
+    mn = min(n, m)
     t = list(range(mn))
-    s = sorted( x,  key=itemgetter(1), reverse=True)
+    s = sorted(x, key=itemgetter(1), reverse=True)  # sorting by descending values
 
-    for k in range(mn-1):
-        t[k+1] = t[k] + (s[k+1][1] != s[k][1])
+    t[0] = 0  # the largest value gets  rank 0
+    for k in range(mn - 1):  # compute the  rank of values, giving the same rank for ties
+        t[k + 1] = t[k] + (s[k + 1][1] != s[k][1])  # the ranks are increasing with values decreasing
 
-    return [f'readsstrainsrank({ident},{j}, {t[mn-1]-t[i]}).' for i,(j,w) in enumerate(s[:n])]
+    # w is the proportion of qgrams and t[i] the rank of w in the read
+    return [f'readsstrainsrank("{flag}",{ident},{j}, {w}, {t[i]}).' for i, (j, w) in
+            enumerate(s[:mn])]  # keeps at most n ranks
 
 def treat_strain(strain,dic):
     '''Take a dictionary and a set of strains and add 1 to the set of strains'''
@@ -220,33 +256,33 @@ def quantification(file,strains,marginals):
         else:
             treat_strain(strain,dic)
     #print(dic)
-    
-def calcul_abondance(out,strains,nb_strains,abondances,reads,length):
-    '''Computation of the abondance, this part of the code still needs to be tested and improved'''
-    
-    print(f'Start : {abondances}')
-   
-    v = vraissemblance(strains,nb_strains,reads,abondances,length)
-    
-    for i in range(100):
-        
-        #Expectation part
-        njs = expectation(strains,nb_strains,reads,abondances)
 
-        #Maximisation part
-        ajs = maximization(strains,nb_strains,reads,njs,length)
-        
+def compute_abundance(out, strains, nb_strains, abundances, reads, length):
+    '''Computation of the abundance, this part of the code still needs to be tested and improved'''
+
+    print(f'Start : {abundances}')
+
+    v = vraissemblance(strains, nb_strains, reads, abundances, length)
+
+    for i in range(100):
+
+        # Expectation part
+        njs = expectation(strains, nb_strains, reads, abundances)
+
+        # Maximisation part
+        ajs = maximization(strains, nb_strains, reads, njs, length)
+
         modif = 0
         for i in range(nb_strains):
-            modif = modif+(abondances[i]-ajs[i])
-        abondances = ajs
-        
-        v = vraissemblance(strains,nb_strains,reads,abondances,length)
-    
-    #Write the results
-    with open(out,'w') as o:
-        for i,s in enumerate(strains):
-            o.write(f'{s} : {round(abondances[i],2)}\n')
+            modif = modif + (abundances[i] - ajs[i])
+        abundances = ajs
+
+        v = vraissemblance(strains, nb_strains, reads, abundances, length)
+
+    # Write the results
+    with open(out, 'w') as o:
+        for i, s in enumerate(strains):
+            o.write(f'{s} : {round(abundances[i], 2)}\n')
 
 def isfloat(value):
     try:
@@ -309,18 +345,23 @@ def main(args):
     
     #Get the strains names 
     names,nb_strains = read_species_names(args.listname)
-    #Get the strains for every reads
-    strainsreads = read_matrix(args.matrix,args.nbchoices,args.threshold,nb_strains,args.listname)
     
+    # Margin
+    # It is used to filter rows either that have to many null values to be retained
+    # or on the opposite the best rows that have a sufficient number of non null values
+
+    # Get the strains for every reads
+    strainsreads = read_matrix(args.matrix, args.nbchoices, args.threshold, args.margin, nb_strains, args.listname)
+
     #Get genomes length
     lengths = get_length(args.length)
 
     #Initialisation of the constant for the ASP script
-    constante = f'#const nf=1. \n#const threshold={args.threshold}. \n#const nbchoices={args.nbchoices}.'
-    matrix = f'matrixreadspecies(1,"{args.matrix}").'
-    
+    # Initialisation of the constant for the ASP script
+    constante = f'#const threshold={args.threshold}. \n#const nbchoices={args.nbchoices}.  \n#const margin={args.margin}.\n#const highpass={args.highpass}. \n#const parsimony=5. \n#const rank0=5.\n'
+
     #order the ASP script to run in toexec and solve it
-    toexec = constante+matrix+names+strainsreads+ASP
+    toexec = constante+names+strainsreads+ASP
     try:
         answers = solve(inline=toexec,options='--opt-mode=optN')
     except FileNotFoundError:
@@ -359,14 +400,13 @@ def main(args):
 
     strains_in = list(soluce)[-1]
     
-    #In case of multiple optimum we take the set with the less strains
+    #In case of multiple optima, retain the set with a minimal number of strains
     for s in soluce:
-        if len(s) <= len(strains_in):
-            strains_in = set(s)
-    #Here we have the strains present in the sample (strains_in)
+        if len(s) < len(strains_in):
+            strains_in = set(s) #strains_in contains the minimum
     
     reads = []
-    with open(args.file,'r') as f: #We read the results file from HowDeSBT
+    with open(args.file,'r') as f: #Results file read from HowDeSBT
         f.readline()
         genomes = set()
         for line in f:
@@ -389,12 +429,12 @@ def main(args):
     strains = sorted(list(strains_in))
     nb_strains = int(len(strains))
     
-    #Start the abondance computation with all strains at the same level
+    #Start the abundance computation with a uniform distribution of strains
     abondances = []
     for i in range(nb_strains):
         abondances.append(float(1/nb_strains))
         
-    #Get the length of each strains from the sample
+    #Get the length of each strain in the sample
     longueurs = []
     for s in strains:
         try :
@@ -407,11 +447,9 @@ def main(args):
                 print(f'File {args.length} does not contains the same strains than {args.listname}')
                 raise
     
-    #Compute the abondance for each strain and write the output file
-    calcul_abondance(args.output,strains,nb_strains,abondances,reads,longueurs)
+    #Compute the abundance for each strain and write it in the output file
+    compute_abundance(args.output,strains,nb_strains,abondances,reads,longueurs)
         
 
 if __name__ == "__main__":
     main()
-
-
