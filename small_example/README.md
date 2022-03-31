@@ -19,20 +19,19 @@ howdesbt makebfQ --k=15 --qgram=seedfile.txt --bits=0.02G *.fna
 ls *.bf > leafname
 #merge sibling strains
 howdesbt distance --list=leafname
-ORI.py threshold -m hamming_matrix.tsv -t 0.0002
+ORI.py threshold -n leafname -m hamming_matrix.tsv -t 0.0002
+howdesbt distance --list=leafname --threshold=0.0002 --matrix=hamming_matrix.bin --merge
 ORI.py clean_merge -n leafname -r . -o list_number_file.txt
 ls *.bf > leafname_merge
 ORI.py merge_length -b leafname_merge -l length.txt -c list_number_file.txt -o merge_length.txt
 #
-howdesbt cluster --list=leafname/or/leafname_merge --tree=union.sbt --nodename=node{number} --cull
+howdesbt cluster --list=leafname_merge --tree=union.sbt --nodename=node{number} --cull
 howdesbt build --howde --tree=union.sbt --outtree=howde.sbt
 ls | grep -Pv 'detbrief.rrr.' | grep '.bf' | xargs rm --
 #
 
 #Query part
-ORI.py suppr_bad_reads -fq ../reads/2Strains.fastq -q 9 -l 2000
-head -n 16000 2Strains_better_than_9.fastq > 2Strains_4000_reads.fq
-howdesbt queryQ --sort --qgram=seedfile.txt --tree=howde.sbt --threshold=0.5 2Strains_4000_reads.fq > results_howde.txt
+howdesbt queryQ --sort --qgram=seedfile.txt --tree=howde.sbt --threshold=0.5 ../reads/JIM8232_1000_reads.fastq > results_howde.txt
 ORI.py matrix -f results_howde.txt -l leafname_merge -o matrix.tsv
 #
 
