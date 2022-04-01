@@ -68,7 +68,7 @@ def merge_length(bf,length,correspondance,out):
                     line = line.strip().split('\t')
                     strain = line[0]
                     longueur = line[1]
-                leng[strain]= int(longueur)
+                    leng[strain]= int(longueur)
         except ValueError:
             raise
         
